@@ -10,7 +10,7 @@
             <h4>{{ $product->title }}</h4>
             <p>{{ $product->description }}</p>
             <h4>{{ $product->price }}</h4>
-            <a href="#">{{ trans("Add") }}</a>
+            <a href="index/{{$product->id}}">{{ trans("Add") }}</a>
         </div>
     @endforeach
 
