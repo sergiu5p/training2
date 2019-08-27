@@ -11,4 +11,12 @@
 |
 */
 
-Route::get('/', 'ProductController@index');
+Route::get('/index', [
+    'uses' => 'ProductController@index',
+    'as' => 'product.index'
+]);
+
+Route::get('/index/{id}', [
+    'uses' => 'ProductController@store',
+    'as' =>'product.addToCart'
+]);
