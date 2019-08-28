@@ -17,7 +17,12 @@ class ProductController extends Controller
      */
     public function index(Request $request)
     {
-        $products = Product::all();
+        if ($request->session()->has('cart')) {
+            $products = Product::all()->whereNotIn('id', $request->session()->get('cart')->items);
+        } else {
+            $products = Product::all();
+        }
+
         return view('products.index', compact('products'));
     }
 
@@ -42,7 +47,7 @@ class ProductController extends Controller
         $product = Product::find($id);
         $oldCart = $request->session()->has('cart') ? $request->session()->get('cart') : null;
         $cart = new Cart($oldCart);
-        $cart->add($product, $product->id);
+        $cart->add($product->id);
         $request->session()->put('cart', $cart);
 
         return redirect()->route('product.index');
