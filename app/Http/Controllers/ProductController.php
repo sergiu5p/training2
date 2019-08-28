@@ -3,9 +3,11 @@
 namespace App\Http\Controllers;
 
 use App\Cart;
+use App\Mail\message;
 use App\Product;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Session;
 
 class ProductController extends Controller
@@ -52,6 +54,10 @@ class ProductController extends Controller
         } else {
             $products = Product::all();
         }
+
+        Mail::to('purcariu.sergiu@gmail.com')->send(
+            new message()
+        );
 
         return view('products.index', compact('products'));
     }
