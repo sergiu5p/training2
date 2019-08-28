@@ -14,4 +14,18 @@
         </div>
     @endforeach
 
+    <form method="POST" action="/mail">
+        @csrf
+
+        <input type="text" name="name" placeholder="{{ trans('Name') }}" required>
+        <br>
+        <br>
+        <input type="email" name="email" placeholder="{{ trans('E-mail') }}" required>
+        <br>
+        <br>
+        <input type="text" name="comments" placeholder="{{ trans("Comments") }}">
+        <br>
+        <br>
+        <button name="checkout">{{ trans("Checkout") }}</button>
+    </form>
 @endsection
