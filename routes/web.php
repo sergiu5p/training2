@@ -11,6 +11,8 @@
 |
 */
 
+use App\Mail\mailOrder;
+
 Route::get('/', [
     'uses' => 'ProductController@show',
     'as' => 'product.show'
@@ -30,3 +32,8 @@ Route::get('/remove/{id}', [
     'uses' => 'ProductController@destroy',
     'as' => 'product.remove'
 ]);
+
+Route::post('/mail', 'OrderController@sendMail'
+//    Mail::to('saquib.rizwan@cloudways.com')->send(new mailOrder($request->all()));
+//    return view('email.message');
+);
