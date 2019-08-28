@@ -13,11 +13,11 @@ class Cart
         }
     }
 
-    public function add($item, $id)
+    public function add($id)
     {
-        $storedItem = ['price' => $item->price, 'item' => $item];
-        $storedItem['price'] = $item->price;
-        $this->items[$id] = $storedItem;
+//        $storedItem = ['price' => $item->price, 'item' => $item];
+//        $storedItem['price'] = $item->price;
+        $this->items[] = $id;
     }
 
 }
