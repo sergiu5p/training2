@@ -13,5 +13,8 @@
             <a href="index/{{$product->id}}">{{ trans("Add") }}</a>
         </div>
     @endforeach
+        <div>
+            <a href="#">Go to Cart!</a>
+        </div>
 
 @endsection
