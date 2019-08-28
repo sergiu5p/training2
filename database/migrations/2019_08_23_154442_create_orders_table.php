@@ -14,19 +14,13 @@ class CreateOrdersTable extends Migration
     public function up()
     {
         Schema::create('orders', function (Blueprint $table) {
-            $table->bigIncrements('id');
+            $table->BigIncrements('id');
             $table->string('name');
             $table->string('email');
             $table->text('comments');
             $table->timestamps();
         });
 
-        Schema::create('order_product', function (Blueprint $table) {
-            $table->bigIncrements('order_id');
-            $table->bigIncremets('product_id');
-            $table->foreign('order_id')->references('id')->on('orders');
-            $table->foreign('product_id')->references('id')->on('product');
-        });
     }
 
     /**
@@ -37,6 +31,5 @@ class CreateOrdersTable extends Migration
     public function down()
     {
         Schema::dropIfExists('orders');
-        Schema::dropIfExists('order_product');
     }
 }
