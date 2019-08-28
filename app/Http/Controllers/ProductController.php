@@ -15,7 +15,7 @@ class ProductController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
         $products = Product::all();
         return view('products.index', compact('products'));
@@ -40,13 +40,11 @@ class ProductController extends Controller
     public function store(Request $request, $id)
     {
         $product = Product::find($id);
-        $oldCart = Session::has('cart') ? Session::get('cart') : null;
+        $oldCart = $request->session()->has('cart') ? $request->session()->get('cart') : null;
         $cart = new Cart($oldCart);
         $cart->add($product, $product->id);
-
         $request->session()->put('cart', $cart);
 
-//        dd($request->session()->get('cart'));
         return redirect()->route('product.index');
     }
 
