@@ -10,11 +10,11 @@
             <h4>{{ $product->title }}</h4>
             <p>{{ $product->description }}</p>
             <h4>{{ $product->price }}</h4>
-            <a href="index/{{$product->id}}">{{ trans("Add") }}</a>
+            <a href="add/{{$product->id}}">{{ trans("Add") }}</a>
         </div>
     @endforeach
         <div>
-            <a href="#">Go to Cart!</a>
+            <a href="/cart">Go to Cart!</a>
         </div>
 
 @endsection
