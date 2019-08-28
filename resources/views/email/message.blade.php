@@ -1,6 +1,8 @@
 @component('mail::message')
 # Introduction
 
+{{ $request->name }}
+
 The body of your message.
 
 @component('mail::button', ['url' => ''])
