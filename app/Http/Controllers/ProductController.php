@@ -10,21 +10,6 @@ use Illuminate\Support\Facades\Session;
 
 class ProductController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function index(Request $request)
-    {
-        if ($request->session()->has('cart')) {
-            $products = Product::all()->whereNotIn('id', $request->session()->get('cart')->items);
-        } else {
-            $products = Product::all();
-        }
-
-        return view('products.index', compact('products'));
-    }
 
     /**
      * Show the form for creating a new resource.
@@ -50,20 +35,37 @@ class ProductController extends Controller
         $cart->add($product->id);
         $request->session()->put('cart', $cart);
 
-        return redirect()->route('product.index');
+        return redirect()->route('product.show');
     }
 
     /**
      * Display the specified resource.
      *
-     * @param  int  $id
+     * @param Request $request
+     * @param int $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show(Request $request)
     {
-        //
+        if ($request->session()->has('cart')) {
+            $products = Product::all()->whereNotIn('id', $request->session()->get('cart')->items);
+        } else {
+            $products = Product::all();
+        }
+
+        return view('products.index', compact('products'));
     }
 
+    public function showCart(Request $request)
+    {
+        if ($request->session()->has('cart')) {
+            $products = Product::all()->whereIn('id', $request->session()->get('cart')->items);
+        } else {
+            $products = Product::all();
+        }
+
+        return view('products.cart', compact('products'));
+    }
     /**
      * Show the form for editing the specified resource.
      *
@@ -93,8 +95,13 @@ class ProductController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(Request $request, $id)
     {
-        //
+        $index = array_search($id, $request->session()->get('cart')->items);
+
+        if ($index !== false) {
+            unset($request->session()->get('cart')->items[$index]);
+        }
+        return back();
     }
 }
