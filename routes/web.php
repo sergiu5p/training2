@@ -11,12 +11,22 @@
 |
 */
 
-Route::get('/index', [
-    'uses' => 'ProductController@index',
-    'as' => 'product.index'
+Route::get('/', [
+    'uses' => 'ProductController@show',
+    'as' => 'product.show'
 ]);
 
-Route::get('/index/{id}', [
+Route::get('/add/{id}', [
     'uses' => 'ProductController@store',
     'as' =>'product.addToCart'
+]);
+
+Route::get('/cart', [
+    'uses' => 'ProductController@showCart',
+    'as' => 'product.showCart'
+]);
+
+Route::get('/remove/{id}', [
+    'uses' => 'ProductController@destroy',
+    'as' => 'product.remove'
 ]);
