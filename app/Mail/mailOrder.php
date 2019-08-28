@@ -10,15 +10,16 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 class mailOrder extends Mailable
 {
     use Queueable, SerializesModels;
+    public $request;
 
     /**
      * Create a new message instance.
      *
-     * @return void
+     * @param $request
      */
-    public function __construct()
+    public function __construct($request)
     {
-        //
+        $this->request = $request;
     }
 
     /**

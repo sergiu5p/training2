@@ -7,7 +7,7 @@ use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Contracts\Queue\ShouldQueue;
 
-class mailme extends Mailable
+class message extends Mailable
 {
     use Queueable, SerializesModels;
 
@@ -28,10 +28,10 @@ class mailme extends Mailable
      */
     public function build()
     {
-        $address = 'saquib.rizwan@cloudways.com';
-        $name = 'Saquib Rizwan';
-        $subject = 'Laravel Email';
-        return $this->view('emails.mailme')
+        $address = 'eCommerce@laravel.com';
+        $name = 'eCommerce';
+        $subject = 'Order';
+        return $this->view('emails.message')
             ->from($address, $name)
             ->subject($subject);
     }
