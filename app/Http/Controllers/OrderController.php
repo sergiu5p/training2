@@ -2,14 +2,18 @@
 
 namespace App\Http\Controllers;
 
-use App\Mail\mailOrder;
 use App\Mail\sendMail;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
 
-
 class OrderController extends Controller
 {
+    protected $fillable = [
+        "name",
+        "email",
+        "comments"
+    ];
+
     public function sendMail(Request $request)
     {
         $this->validate($request, [
