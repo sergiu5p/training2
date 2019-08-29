@@ -56,14 +56,13 @@ class ProductController extends Controller
 
     public function showCart(Request $request)
     {
-        if ($request->session()->has('cart')) {
+        if ($request->session()->has('cart') && $request->session()->get('cart')->items) {
             $products = Product::all()->whereIn('id', $request->session()->get('cart')->items);
-        } else {
-            $products = Product::all();
+            return view('products.cart', compact('products'));
         }
-
-        return view('products.cart', compact('products'));
+        return redirect()->route('product.show');
     }
+
     /**
      * Show the form for editing the specified resource.
      *
