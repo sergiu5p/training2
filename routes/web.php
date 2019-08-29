@@ -11,9 +11,8 @@
 |
 */
 
-use App\Mail\mailOrder;
 
-Route::get('/', [
+Route::get('/index', [
     'uses' => 'ProductController@show',
     'as' => 'product.show'
 ]);
