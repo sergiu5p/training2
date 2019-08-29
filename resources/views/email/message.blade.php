@@ -3,9 +3,7 @@
 
 The body of your message.
 
-{{ $name }}
-{{ $email }}
-{{ $comments }}
+{{ $message }}
 
 Thanks,<br>
 {{ config('app.name') }}
