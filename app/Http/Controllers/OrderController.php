@@ -17,9 +17,9 @@ class OrderController extends Controller
     public function sendMail(Request $request)
     {
         $this->validate($request, [
-            "name" => "required",
-            "email" => "required",
-            "comments" => "required"
+            "name" => "required|string",
+            "email" => "required|email",
+            "comments" => "required|"
         ]);
 
         $name = $request->name;
@@ -29,5 +29,7 @@ class OrderController extends Controller
         Mail::to('purcariu.sergiu@gmail.com')->send(
             new sendMail($name, $email, $comments)
         );
+        $request->session()->forget('cart');
+        return redirect()->route('product.show');
     }
 }
