@@ -1,10 +1,6 @@
-@component('mail::message')
-# Introduction
-
-The body of your message.
-
-{!! $message !!}
-
-Thanks,<br>
-{{ config('app.name') }}
-@endcomponent
+<!DOCTYPE html>
+<html>
+    <body>
+        {!! $message !!}
+    </body>
+</html>
