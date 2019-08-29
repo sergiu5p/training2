@@ -15,7 +15,7 @@
         </div>
     @endforeach
 
-    <form method="POST" action="/mail">
+    <form method="POST" action="/index">
         @csrf
 
         <input type="text" name="name" placeholder="{{ trans('Name') }}" required>
