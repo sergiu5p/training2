@@ -37,7 +37,7 @@ class sendMail extends Mailable
     {
         $products = Product::all()->whereIn('id', $request->session()->get('cart')->items);
         $message = '';
-ss
+
         foreach ($products as $product)
         {
             $message .= "<img src=".'"'."http"."://".$_SERVER['HTTP_HOST']."/images/".$product->id.'.'.$product->image_extension.'"'.">";
