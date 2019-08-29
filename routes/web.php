@@ -17,6 +17,8 @@ Route::get('/index', [
     'as' => 'product.show'
 ]);
 
+Route::post('/index', 'OrderController@sendMail');
+
 Route::get('/add/{id}', [
     'uses' => 'ProductController@store',
     'as' =>'product.addToCart'
@@ -31,8 +33,3 @@ Route::get('/remove/{id}', [
     'uses' => 'ProductController@destroy',
     'as' => 'product.remove'
 ]);
-
-Route::post('/mail', 'OrderController@sendMail'
-//    Mail::to('saquib.rizwan@cloudways.com')->send(new mailOrder($request->all()));
-//    return view('email.message');
-);
