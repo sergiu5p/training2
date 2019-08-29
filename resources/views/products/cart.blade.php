@@ -4,6 +4,7 @@
 
 @section('content')
 
+    <a href="/index">Go to index</a>
     @foreach($products as $product)
         <div>
             <img src={{ "/images/".$product->id.".".$product->image_extension }} alt="{{ $product->title }}" width="150" height="150">
