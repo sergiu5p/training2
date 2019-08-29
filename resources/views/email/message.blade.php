@@ -3,7 +3,7 @@
 
 The body of your message.
 
-{{ $message }}
+{!! $message !!}
 
 Thanks,<br>
 {{ config('app.name') }}
