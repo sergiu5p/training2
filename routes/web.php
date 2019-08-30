@@ -11,7 +11,6 @@
 |
 */
 
-
 Route::get('/index', [
     'uses' => 'ProductController@show',
     'as' => 'product.show'
@@ -44,4 +43,9 @@ Route::get('/login', function() {
 Route::post('/login', [
    'uses' => 'LoginController@login',
     'as' => 'login'
+]);
+
+Route::match(array('GET', 'POST'), '/products', [
+    'uses' => 'ProductController@products',
+    'as' => 'product.products'
 ]);
