@@ -10,14 +10,18 @@ class LoginController extends Controller
 
     public function login(Request $request)
     {
-        $this->validate($request, [
-            "username" => "required|string",
-            "password" => "required"
-        ]);
+        if ($request->session()->has('login')) {
+            return redirect()->route('product.products');
+        } else {
+            return view('login');
+        }
+    }
 
+    public function checkLogin(Request $request)
+    {
         if ($request->username == \config('admin.name') && $request->password == \config('admin.password')) {
             $request->session()->put('login', true);
-
+            return redirect()->route('product.products');
         } else {
             return view('login', ['message' => "Wrong username or password"]);
         }
