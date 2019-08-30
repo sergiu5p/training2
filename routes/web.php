@@ -32,20 +32,26 @@ Route::get('/cart', [
 ]);
 
 Route::get('/remove/{id}', [
-    'uses' => 'ProductController@destroy',
+    'uses' => 'ProductController@removeFromCart',
     'as' => 'product.remove'
 ]);
 
-Route::get('/login', function() {
-    return view('login');
-});
-
-Route::post('/login', [
+Route::get('/login', [
    'uses' => 'LoginController@login',
     'as' => 'login'
+]);
+
+Route::post('/login', [
+   'uses' => 'LoginController@checkLogin',
+   'as' => 'checkLogin'
 ]);
 
 Route::match(array('GET', 'POST'), '/products', [
     'uses' => 'ProductController@products',
     'as' => 'product.products'
+]);
+
+Route::get('/delete/{$id}', [
+   'uses' => 'ProductController@destroy',
+   'as' => 'product.destroy'
 ]);
