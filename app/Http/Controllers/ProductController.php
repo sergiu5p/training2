@@ -101,4 +101,10 @@ class ProductController extends Controller
         }
         return back();
     }
+
+    public function products()
+    {
+        $products = Product::all();
+        return view('products.products', compact('products'));
+    }
 }
