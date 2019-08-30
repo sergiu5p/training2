@@ -51,7 +51,7 @@ Route::match(array('GET', 'POST'), '/products', [
     'as' => 'product.products'
 ]);
 
-Route::get('/delete/{$id}', [
+Route::get('/delete/{id}', [
    'uses' => 'ProductController@destroy',
    'as' => 'product.destroy'
 ]);
