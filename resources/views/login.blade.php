@@ -10,7 +10,7 @@
         </div>
     @endif
 
-    <form method="POST">
+    <form method="POST" action="{{ route('checkLogin')}}">
         @csrf
 
         <input type="text" name="username" placeholder="{{ trans('username') }}">
