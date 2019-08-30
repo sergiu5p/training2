@@ -92,7 +92,7 @@ class ProductController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Request $request, $id)
+    public function removeFromCart(Request $request, $id)
     {
         $index = array_search($id, $request->session()->get('cart')->items);
 
@@ -102,9 +102,15 @@ class ProductController extends Controller
         return back();
     }
 
-    public function products()
+    public function products(Request $request)
     {
         $products = Product::all();
         return view('products.products', compact('products'));
+    }
+
+    public function destroy(Request $request, $id)
+    {
+        $product = Product::where('id', $id);
+        dd($product);
     }
 }

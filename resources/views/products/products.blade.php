@@ -11,7 +11,7 @@
             <h4>{{ $product->title }}</h4>
             <p>{{ $product->description }}</p>
             <h4>{{ $product->price }}</h4>
-            <a href="remove/{{$product->id}}">{{ trans("Remove") }}</a>
+            <a href="{{ route('product.destroy', $product->id) }}">{{ trans("Remove") }}</a>
         </div>
     @endforeach
 
