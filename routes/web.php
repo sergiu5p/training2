@@ -17,11 +17,14 @@ Route::get('/index', [
     'as' => 'product.show'
 ]);
 
-Route::post('/index', 'OrderController@sendMail');
+Route::post('/index', [
+    'uses' => 'OrderController@sendMail',
+    'as' => 'sendMail'
+]);
 
 Route::get('/add/{id}', [
     'uses' => 'ProductController@store',
-    'as' =>'product.addToCart'
+    'as' => 'product.addToCart'
 ]);
 
 Route::get('/cart', [
@@ -32,4 +35,13 @@ Route::get('/cart', [
 Route::get('/remove/{id}', [
     'uses' => 'ProductController@destroy',
     'as' => 'product.remove'
+]);
+
+Route::get('/login', function() {
+    return view('login');
+});
+
+Route::post('/login', [
+   'uses' => 'LoginController@login',
+    'as' => 'login'
 ]);
