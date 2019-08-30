@@ -110,7 +110,7 @@ class ProductController extends Controller
 
     public function destroy(Request $request, $id)
     {
-        $product = Product::where('id', $id);
-        dd($product);
+        $product = Product::where('id', $id)->delete();
+        return back();
     }
 }
