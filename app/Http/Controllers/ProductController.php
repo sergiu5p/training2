@@ -27,7 +27,7 @@ class ProductController extends Controller
      */
     public function store(Request $request, $id)
     {
-        $product = Product::find($id);
+        $product = Product::query()->findOrFail($id);
         $oldCart = $request->session()->has('cart') ? $request->session()->get('cart') : null;
         $cart = new Cart($oldCart);
         $cart->add($product->id);
@@ -69,9 +69,10 @@ class ProductController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit($id = null)
     {
-        //
+        $product = $id ? Product::query()->findOrFail($id) : new Product();
+        return view('products.product', compact('product'));
     }
 
     /**
@@ -110,7 +111,7 @@ class ProductController extends Controller
 
     public function destroy(Request $request, $id)
     {
-        $product = Product::where('id', $id)->delete();
+        $product = Product::query()->where('id', $id)->delete();
         return back();
     }
 }
