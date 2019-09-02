@@ -144,6 +144,8 @@ class ProductController extends Controller
             );
             $validatedData['image']->move(public_path() . '/images/', $product->id . '.' . $validatedData['image']->extension());
         }
+
+        return redirect()->route('product.products');
     }
 
     /**
@@ -179,7 +181,11 @@ class ProductController extends Controller
         if (!$request->session()->has('login')) {
             return redirect()->route('login');
         }
-        $product = Product::query()->where('id', $id)->delete();
+
+        $product = Product::query()->findOrFail($id, ['id', 'image_extension']);
+        File::delete(public_path() . '/images/' . $product->id . '.' . $product->image_extension);
+
+        Product::query()->where('id', $id)->delete();
         return back();
     }
 }
