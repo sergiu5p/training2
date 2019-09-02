@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Cart;
 use App\Product;
 use Illuminate\Http\Request;
+use Illuminate\Validation\Rule;
 
 class ProductController extends Controller
 {
@@ -85,9 +86,36 @@ class ProductController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, $id = null)
     {
-        //
+        if (!$request->session()->has('login')) {
+            return redirect()->route('login');
+        }
+
+        $unique = Rule::unique('products');
+        if ($id) {
+            $unique = $unique->ignore(Product::query()->findOrFail($id));
+        }
+
+        $validatedData = $request->validate([
+            'title' => ['bail',
+                        'required',
+                        'max:255',
+                        $unique,
+                        ],
+
+            'description' => ['required'],
+
+            'price' => [
+                        'required',
+                        'numeric'
+                        ],
+
+            'image' => [
+                        'image',
+                        !$id ? 'required': ''
+                        ],
+        ]);
     }
 
     /**
