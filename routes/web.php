@@ -56,7 +56,12 @@ Route::get('/delete/{id}', [
    'as' => 'product.destroy'
 ]);
 
-Route::get('/edit/{id}', [
+Route::get('/edit/{id?}', [
     'uses' => 'ProductController@edit',
     'as' => 'product.edit'
+]);
+
+Route::post('/update/{id?}', [
+    'uses' => 'ProductController@update',
+    'as' => 'update'
 ]);
