@@ -69,8 +69,11 @@ class ProductController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($id = null)
+    public function edit(Request $request, $id = null)
     {
+        if (!$request->session()->has('login')) {
+            return redirect()->route('login');
+        }
         $product = $id ? Product::query()->findOrFail($id) : new Product();
         return view('products.product', compact('product'));
     }
@@ -95,6 +98,9 @@ class ProductController extends Controller
      */
     public function removeFromCart(Request $request, $id)
     {
+        if (!$request->session()->has('login')) {
+            return redirect()->route('login');
+        }
         $index = array_search($id, $request->session()->get('cart')->items);
 
         if ($index !== false) {
@@ -105,12 +111,18 @@ class ProductController extends Controller
 
     public function products(Request $request)
     {
+        if (!$request->session()->has('login')) {
+            return redirect()->route('login');
+        }
         $products = Product::all();
         return view('products.products', compact('products'));
     }
 
     public function destroy(Request $request, $id)
     {
+        if (!$request->session()->has('login')) {
+            return redirect()->route('login');
+        }
         $product = Product::query()->where('id', $id)->delete();
         return back();
     }
