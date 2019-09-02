@@ -15,8 +15,6 @@ class Cart
 
     public function add($id)
     {
-//        $storedItem = ['price' => $item->price, 'item' => $item];
-//        $storedItem['price'] = $item->price;
         $this->items[] = $id;
     }
 
