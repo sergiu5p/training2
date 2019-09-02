@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Cart;
 use App\Product;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\File;
 use Illuminate\Validation\Rule;
 
 class ProductController extends Controller
@@ -116,6 +117,33 @@ class ProductController extends Controller
                         !$id ? 'required': ''
                         ],
         ]);
+
+        if ($id) {
+            if (isset($validatedData['image'])) {
+                $product = Product::query()->findOrFail($id);
+                $extension = $validatedData['image']->extension();
+                File::delete(public_path() . '/images/' . $product->id . '.' . $product->image_extension);
+                $validatedData['image']->move(public_path() . '/images/', $product->id . '.' . $extension);
+                Product::query()->findOrFail($id)->update(['image_extension' => $extension]);
+            }
+
+            Product::query()->findOrFail($id)->update(
+                    [
+                        'title' => $validatedData['title'],
+                        'description' => $validatedData['description'],
+                        'price' => $validatedData['price']
+                    ]);
+
+        } else {
+            Product::query()->create(
+                [
+                    'title' => $validatedData['title'],
+                    'description' => $validatedData['description'],
+                    'price' => $validatedData['price']
+                ]
+            );
+
+        }
     }
 
     /**
