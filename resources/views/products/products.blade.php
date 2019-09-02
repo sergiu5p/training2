@@ -15,5 +15,6 @@
             <a href="{{ route('product.destroy', $product->id) }}">{{ trans("Remove") }}</a>
         </div>
     @endforeach
+    <a href="{{ route('product.edit') }}">{{ trans('Add') }}</a>
 
 @endsection
