@@ -114,17 +114,16 @@ class ProductController extends Controller
 
             'image' => [
                         'image',
-                        !$id ? 'required': ''
+                        !$id ? 'required' : ''
                         ],
         ]);
 
         if ($id) {
             if (isset($validatedData['image'])) {
                 $product = Product::query()->findOrFail($id);
-                $extension = $validatedData['image']->extension();
                 File::delete(public_path() . '/images/' . $product->id . '.' . $product->image_extension);
-                $validatedData['image']->move(public_path() . '/images/', $product->id . '.' . $extension);
-                Product::query()->findOrFail($id)->update(['image_extension' => $extension]);
+                $validatedData['image']->move(public_path() . '/images/', $product->id . '.' . $validatedData['image']->extension());
+                Product::query()->findOrFail($id)->update(['image_extension' => $validatedData['image']->extension()]);
             }
 
             Product::query()->findOrFail($id)->update(
@@ -135,14 +134,15 @@ class ProductController extends Controller
                     ]);
 
         } else {
-            Product::query()->create(
+            $product = Product::query()->create(
                 [
                     'title' => $validatedData['title'],
                     'description' => $validatedData['description'],
-                    'price' => $validatedData['price']
+                    'price' => $validatedData['price'],
+                    'image_extension' => $validatedData['image']->extension()
                 ]
             );
-
+            $validatedData['image']->move(public_path() . '/images/', $product->id . '.' . $validatedData['image']->extension());
         }
     }
 
