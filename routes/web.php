@@ -75,3 +75,8 @@ Route::get('/orders', [
     'uses' => 'OrderController@showOrders',
     'as' => 'showOrders'
 ]);
+
+Route::get('/orders/{id}', [
+    'uses' => 'OrderController@showOrder',
+    'as' => 'showOrder'
+]);
