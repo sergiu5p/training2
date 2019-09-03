@@ -46,6 +46,11 @@ Route::post('/login', [
    'as' => 'checkLogin'
 ]);
 
+Route::get('/logout', [
+    'uses' => 'LoginController@logout',
+    'as' => 'logout'
+]);
+
 Route::match(array('GET', 'POST'), '/products', [
     'uses' => 'ProductController@products',
     'as' => 'product.products'
