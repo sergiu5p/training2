@@ -65,4 +65,19 @@ class OrderController extends Controller
 
         return view('orders.orders', compact('orders'));
     }
+
+    public function showOrder(Request $request, $id)
+    {
+        if (!$request->session()->has('login')) {
+            return redirect()->route('login');
+        }
+
+        $order = DB::table(DB::raw('order_product'))
+            ->select(DB::raw('products.title'), DB::raw('orders.name'), DB::raw('orders.email'), DB::raw('orders.comments'))
+            ->rightJoin(DB::raw('products'), DB::raw('order_product.product_id'), '=', DB::raw('products.id'))
+            ->rightJoin(DB::raw('orders'), DB::raw('order_product.order_id'), '=', DB::raw('orders.id'))
+            ->where(DB::raw('order_product.order_id'), '=', DB::raw($id))->get();
+
+        return view('orders.order', compact('order'));
+    }
 }
