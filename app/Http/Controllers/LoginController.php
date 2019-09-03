@@ -26,4 +26,10 @@ class LoginController extends Controller
             return view('login', ['message' => "Wrong username or password"]);
         }
     }
+
+    public function logout(Request $request)
+    {
+        $request->session()->forget('login');
+        return redirect()->route('product.show');
+    }
 }
