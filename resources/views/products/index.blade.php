@@ -4,7 +4,6 @@
 
 @section('content')
 
-    <a href="/login">Login</a>
     @foreach($products as $product)
         <div>
             <img src={{ "/images/".$product->id.".".$product->image_extension }} alt="{{ $product->title }}" width="150" height="150">
@@ -14,8 +13,5 @@
             <a href="add/{{$product->id}}">{{ trans("Add") }}</a>
         </div>
     @endforeach
-        <div>
-            <a href="/cart">Go to Cart!</a>
-        </div>
 
 @endsection
