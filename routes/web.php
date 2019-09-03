@@ -70,3 +70,8 @@ Route::post('/update/{id?}', [
     'uses' => 'ProductController@update',
     'as' => 'update'
 ]);
+
+Route::get('/orders', [
+    'uses' => 'OrderController@showOrders',
+    'as' => 'update'
+]);
