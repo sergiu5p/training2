@@ -11,6 +11,10 @@
 |
 */
 
+Route::get('/', function () {
+   return redirect()->route('product.show');
+});
+
 Route::get('/index', [
     'uses' => 'ProductController@show',
     'as' => 'product.show'
