@@ -5,7 +5,7 @@
 @section('content')
 
     <div>
-        <form method="POST" action={{route('update', $product->id)}} enctype="multipart/form-data">
+        <form method="POST" action={{ route('update', $product->id) }} enctype="multipart/form-data">
             @csrf
 
             Title: <input type="text" name="title" value={{ $product->title }} required>
