@@ -12,23 +12,6 @@ class ProductController extends Controller
 {
 
     /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(Request $request, $id)
-    {
-        $product = Product::query()->findOrFail($id);
-        $oldCart = $request->session()->has('cart') ? $request->session()->get('cart') : null;
-        $cart = new Cart($oldCart);
-        $cart->add($product->id);
-        $request->session()->put('cart', $cart);
-
-        return redirect()->route('product.show');
-    }
-
-    /**
      * Display the specified resource.
      *
      * @param Request $request
@@ -38,21 +21,18 @@ class ProductController extends Controller
     public function show(Request $request)
     {
         if ($request->session()->has('cart')) {
-            $products = Product::all()->whereNotIn('id', $request->session()->get('cart')->items);
+            $products = Product::query()
+                ->whereNotIn('id', data_get($request->session()->get('cart'), 'items'))
+                ->get();
         } else {
             $products = Product::all();
         }
 
-        return view('products.index', compact('products'));
-    }
-
-    public function showCart(Request $request)
-    {
-        if ($request->session()->has('cart') && $request->session()->get('cart')->items) {
-            $products = Product::all()->whereIn('id', $request->session()->get('cart')->items);
-            return view('products.cart', compact('products'));
+        if ($request->ajax()) {
+            return $products;
+        } else {
+            return view('products.index', compact('products'));
         }
-        return redirect()->route('product.show');
     }
 
     /**
@@ -109,20 +89,19 @@ class ProductController extends Controller
         ]);
 
         if ($id) {
+            $toUpdate = [
+                'title' => $validatedData['title'],
+                'description' => $validatedData['description'],
+                'price' => $validatedData['price']
+            ];
+            $product = Product::query()->findOrFail($id);
             if (isset($validatedData['image'])) {
-                $product = Product::query()->findOrFail($id);
-                File::delete(public_path() . '/images/' . $product->id . '.' . $product->image_extension);
-                $validatedData['image']->move(public_path() . '/images/', $product->id . '.' . $validatedData['image']->extension());
-                Product::query()->findOrFail($id)->update(['image_extension' => $validatedData['image']->extension()]);
+                File::delete(storage_path('app/images/') . $product->id . '.' . $product->image_extension);
+                $validatedData['image']->move(storage_path('app/images/'), $product->id . '.' . $validatedData['image']->extension());
+                $toUpdate = array_merge($toUpdate, ['image_extension' => $validatedData['image']->extension()]);
             }
-
-            Product::query()->findOrFail($id)->update(
-                    [
-                        'title' => $validatedData['title'],
-                        'description' => $validatedData['description'],
-                        'price' => $validatedData['price']
-                    ]);
-
+            $product->fill($toUpdate);
+            $product->save();
         } else {
             $product = Product::query()->create(
                 [
@@ -132,7 +111,7 @@ class ProductController extends Controller
                     'image_extension' => $validatedData['image']->extension()
                 ]
             );
-            $validatedData['image']->move(public_path() . '/images/', $product->id . '.' . $validatedData['image']->extension());
+            $validatedData['image']->move(storage_path('app/images/'), $product->id . '.' . $validatedData['image']->extension());
         }
 
         return redirect()->route('product.products');
@@ -149,10 +128,10 @@ class ProductController extends Controller
         if (!$request->session()->has('login')) {
             return redirect()->route('login');
         }
-        $index = array_search($id, $request->session()->get('cart')->items);
+        $index = array_search($id, data_get($request->session()->get('cart'), 'items'));
 
         if ($index !== false) {
-            unset($request->session()->get('cart')->items[$index]);
+            unset($request->session()->get('cart')->items[$index]);  //data_get
         }
         return back();
     }
@@ -173,7 +152,7 @@ class ProductController extends Controller
         }
 
         $product = Product::query()->findOrFail($id, ['id', 'image_extension']);
-        File::delete(public_path() . '/images/' . $product->id . '.' . $product->image_extension);
+        File::delete(storage_path('app/images/'). $product->id . '.' . $product->image_extension);
 
         Product::query()->where('id', $id)->delete();
         return back();
