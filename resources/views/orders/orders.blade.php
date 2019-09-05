@@ -11,7 +11,7 @@
             <h4>{{ trans("Comments: ").$order->comments }}</h4>
             <h4>{{ trans("Summed price: ").strval($order->summed_price) }} $</h4>
             <h4>{{ trans("Creation date: ").$order->created_at }}</h4>
-            <a href={{ route('showOrder', $order->id) }}>{{ trans("View") }}</a>
+            <a href={{ route('orders.show', $order->id) }}>{{ trans("View") }}</a>
         </div>
     @endforeach
 
