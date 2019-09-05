@@ -21,6 +21,7 @@ class CartController extends Controller
                 return view('products.cart', compact('products'));
             }
         }
+
         if ($request->ajax()) {
             return [];
         } else {
@@ -37,6 +38,10 @@ class CartController extends Controller
         $cart->add($product->id);
         $request->session()->put('cart', $cart);
 
+        if ($request->ajax()) {
+            return ['success' => true];
+        }
+
         return redirect()->route('product.show');
     }
 
@@ -46,6 +51,10 @@ class CartController extends Controller
 
         if ($index !== false) {
             unset($request->session()->get('cart')->items[$index]);
+        }
+
+        if ($request->ajax()) {
+            return ['success' => true];
         }
         return back();
     }
