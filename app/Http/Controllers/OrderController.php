@@ -12,8 +12,9 @@ use Illuminate\Support\Facades\Mail;
 class OrderController extends Controller
 {
 
-    public function sendMail(Request $request)
+    public function store(Request $request)
     {
+        $data = $request->all(['name', 'email', 'comments']);
         $insert = Order::query()->create(
             [
                 'name' => $request->name,
@@ -23,7 +24,10 @@ class OrderController extends Controller
         );
         $lastInsertId = $insert->id;
 
-        $products = Product::all()->whereIn('id', $request->session()->get('cart')->items);
+        // comment
+        $products = Product::query()
+            ->whereIn('id', data_get($request->session()->get('cart'), 'items'))
+            ->get();
 
         $products->each(function ($product) use ($lastInsertId) {
            DB::table('order_product')->insert(
@@ -44,14 +48,14 @@ class OrderController extends Controller
         $email = $request->email;
         $comments = $request->comments;
 
-        Mail::to('purcariu.sergiu@gmail.com')->send(
+        Mail::to(env('ADMIN_EMAIL', 'purcariu.sergiu@gmail.com'))->send(
             new sendMail($name, $email, $comments)
         );
         $request->session()->forget('cart');
         return redirect()->route('product.show');
     }
 
-    public function showOrders(Request $request)
+    public function index(Request $request)
     {
         if (!$request->session()->has('login')) {
             return redirect()->route('login');
@@ -66,7 +70,7 @@ class OrderController extends Controller
         return view('orders.orders', compact('orders'));
     }
 
-    public function showOrder(Request $request, $id)
+    public function show(Request $request, $id)
     {
         if (!$request->session()->has('login')) {
             return redirect()->route('login');
