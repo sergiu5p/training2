@@ -73,6 +73,9 @@
                             }
                         });
                         break;
+                    case '#login':
+                        $('.login').show();
+                        break;
                     default:
                         // If all else fails, always default to index
                         // Show the index page
@@ -127,19 +130,29 @@
                 }
             })
         })
-        $(document).on('submit', '.login_form', function () {
+
+        $(document).on('submit', '.login_form', function (event) {
             console.log('login');
-            const username = $("#user_login").val();
-            const password = $("#pass_login").val();
+            var username = $("#user_login").val();
+            var password = $("#pass_login").val();
+            console.log(username, password);
             $.ajax("{{ route('checkLogin') }}", {
                 method: 'POST',
                 dataType: 'json',
+                data : {
+                    username: username,
+                    password: password
+                },
                 success: function (response) {
                     if (response.success) {
                         alert('Login succesfull');
+                        window.location.hash = 'cart';
+                    } else {
+                        alert('Login failed');
                     }
                 }
-            })
+            });
+            event.preventDefault();
         })
     </script>
 </head>
@@ -168,7 +181,6 @@
     <span class="login_message"></span>
 
     <form class="login_form">
-
         <input type="text" id="user_login" name="username" placeholder={{ trans('username') }}>
         <input type="password" id="pass_login" name="password" placeholder={{ trans('password') }}>
         <input type="submit" value={{ trans('Login') }}>
