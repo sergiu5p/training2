@@ -10,7 +10,11 @@
             <h4>{{ $product->title }}</h4>
             <p>{{ $product->description }}</p>
             <h4>{{ $product->price }}</h4>
-            <a href={{ route('product.addToCart', $product->id) }}>{{ trans("Add") }}</a>
+            <form method="POST" action={{ route('cart.store') }}>
+                @csrf
+                <input type="hidden" name="product_id" value="{{ $product->id }}">
+                <input type="submit" name="add" placeholder={{ trans("Add") }}>
+            </form>
         </div>
     @endforeach
 
