@@ -11,6 +11,10 @@
 |
 */
 
+Route::get('/spa', function () {
+   return view('index');
+});
+
 Route::get('/', function () {
    return redirect()->route('product.show');
 });
@@ -20,25 +24,7 @@ Route::get('/index', [
     'as' => 'product.show'
 ]);
 
-Route::post('/index', [
-    'uses' => 'OrderController@sendMail',
-    'as' => 'sendMail'
-]);
-
-Route::get('/add/{id}', [
-    'uses' => 'ProductController@store',
-    'as' => 'product.addToCart'
-]);
-
-Route::get('/cart', [
-    'uses' => 'ProductController@showCart',
-    'as' => 'product.showCart'
-]);
-
-Route::get('/remove/{id}', [
-    'uses' => 'ProductController@removeFromCart',
-    'as' => 'product.remove'
-]);
+Route::resource('cart', 'CartController')->only(['index', 'store', 'destroy']);
 
 Route::get('/login', [
    'uses' => 'LoginController@login',
@@ -55,11 +41,12 @@ Route::get('/logout', [
     'as' => 'logout'
 ]);
 
-Route::match(array('GET', 'POST'), '/products', [
+Route::get('/products', [
     'uses' => 'ProductController@products',
     'as' => 'product.products'
 ]);
 
+// delete
 Route::get('/delete/{id}', [
    'uses' => 'ProductController@destroy',
    'as' => 'product.destroy'
@@ -70,17 +57,10 @@ Route::get('/edit/{id?}', [
     'as' => 'product.edit'
 ]);
 
+// Fix that
 Route::post('/update/{id?}', [
     'uses' => 'ProductController@update',
     'as' => 'update'
 ]);
 
-Route::get('/orders', [
-    'uses' => 'OrderController@showOrders',
-    'as' => 'showOrders'
-]);
-
-Route::get('/orders/{id}', [
-    'uses' => 'OrderController@showOrder',
-    'as' => 'showOrder'
-]);
+Route::resource('orders', 'OrderController')->only(['index', 'show', 'store']);
