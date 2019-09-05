@@ -3,18 +3,22 @@
 @section('title', 'cart')
 
 @section('content')
-
+A
     @foreach($products as $product)
         <div>
             <img alt={{ $product->title }} src={{ "/images/".$product->id.".".$product->image_extension }} width="150" height="150">
             <h4>{{ $product->title }}</h4>
             <p>{{ $product->description }}</p>
             <h4>{{ $product->price }}</h4>
-            <a href={{ route('product.remove', $product->id) }}>{{ trans("Remove") }}</a>
+            <form method="POST" action={{ route('cart.destroy', $product->id) }}>
+                @csrf
+                <input type="hidden" name="_method" value="DELETE">
+                <input type="submit" value="{{ trans("Remove") }}">
+            </form>
         </div>
     @endforeach
 
-    <form method="POST" action={{ route('sendMail') }}>
+    <form method="POST" action={{ route('orders.store') }}>
         @csrf
 
         <input type="text" name="name" placeholder={{ trans('Name') }} required>
