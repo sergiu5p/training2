@@ -19,11 +19,22 @@ class LoginController extends Controller
 
     public function checkLogin(Request $request)
     {
-        if ($request->username == \config('admin.name') && $request->password == \config('admin.password')) {
+        $data = $request->all('username', 'password');
+
+        if ($data['username'] == \config('admin.name') && $data['password'] == \config('admin.password')) {
             $request->session()->put('login', true);
-            return redirect()->route('product.products');
+
+            if ($request->ajax()) {
+                return ['success' => true];
+            } else {
+                return redirect()->route('product.products');
+            }
         } else {
-            return view('login', ['message' => "Wrong username or password"]);
+            if ($request->ajax()) {
+                return ['success' => false];
+            } else {
+                return view('login', ['message' => "Wrong username or password"]);
+            }
         }
     }
 
