@@ -154,6 +154,31 @@
             event.preventDefault();
         })
 
+        $(document).on('submit', '.order_form', function (event) {
+            console.log('Make new order');
+            var name = $("#name").val();
+            var email = $("#email").val();
+            var comments = $("#comments").val();
+            console.log(name);
+            $.ajax("{{ route('orders.store') }}", {
+                method: 'POST',
+                dataType: 'json',
+                data: {
+                    name: name,
+                    email: email,
+                    comments: comments
+                },
+                success: function (response) {
+                    if (response.success) {
+                        alert('Order created succesfully');
+                        window.location.hash = '';
+                    } else {
+                        alert('Failed');
+                    }
+                }
+            });
+            event.preventDefault();
+        })
     </script>
 </head>
 <body>
