@@ -39,7 +39,7 @@ class ProductController extends Controller
      * Show the form for editing the specified resource.
      *
      * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @return Product|\Illuminate\Database\Eloquent\Builder|\Illuminate\Database\Eloquent\Builder[]|\Illuminate\Database\Eloquent\Collection|\Illuminate\Database\Eloquent\Model
      */
     public function edit(Request $request, $id = null)
     {
@@ -47,6 +47,11 @@ class ProductController extends Controller
             return redirect()->route('login');
         }
         $product = $id ? Product::query()->findOrFail($id) : new Product();
+
+        if ($request->ajax()) {
+            return $product;
+        }
+
         return view('products.product', compact('product'));
     }
 
@@ -142,6 +147,10 @@ class ProductController extends Controller
             return redirect()->route('login');
         }
         $products = Product::all();
+        if ($request->ajax()) {
+            return $products;
+        }
+
         return view('products.products', compact('products'));
     }
 
