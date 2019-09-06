@@ -1,6 +1,6 @@
 <html>
 <head>
-    <meta name="csrf-token" content="{{ csrf_token() }}" />
+    <meta name="csrf-token" content="{{ csrf_token() }}"/>
     <!-- Load the jQuery JS library -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
 
@@ -27,7 +27,9 @@
              *     "price": 2
              * }]
              */
-            function renderList(products, productsList) {
+
+            function renderList(products, addToCart, edit) {
+
                 html = [
                     '<tr>',
                     '<th>Title</th>',
@@ -38,13 +40,23 @@
                 ].join('');
 
                 $.each(products, function (key, product) {
+                    var button = '';
+                    if (edit) {
+                        button = '<button class="edit_product" data-product-id="' + product.id + '">Edit</button>' + ' ' +
+                            '<button class="delete_product" data-product-id="' + product.id + '">Delete</button>';
+                    } else {
+                        if (addToCart) {
+                            button = '<button class="add_to_cart" data-product-id="' + product.id + '">Add to Cart</button>';
+                        } else {
+                            button = '<button class="remove_from_cart" data-product-id="' + product.id + '">Remove</button>';
+                        }
+                    }
                     html += [
                         '<tr>',
                         '<td>' + product.title + '</td>',
                         '<td>' + product.description + '</td>',
                         '<td>' + product.price + '</td>',
-                        '<td>' + (productsList ? '<a href="" class="add_to_cart" data-product-id="'+product.id+'">Add to Cart</a>' :
-                            '<a href="" class="remove_from_cart" data-product-id="'+product.id+'">Remove</a>'),
+                        '<td>' + button + '</td>',
                         '</tr>'
                     ].join('');
                 });
@@ -59,7 +71,7 @@
                 // First hide all the pages
                 $('.page').hide();
 
-                switch(window.location.hash) {
+                switch (window.location.hash) {
                     case '#cart':
                         // Show the cart page
                         $('.cart').show();
@@ -68,6 +80,9 @@
                             method: 'GET',
                             dataType: 'json',
                             success: function (response) {
+                                if (response.login) {
+                                    hash = 'login';
+                                }
                                 // Render the products in the cart list
                                 $('.cart .list').html(renderList(response));
                             }
@@ -75,6 +90,19 @@
                         break;
                     case '#login':
                         $('.login').show();
+                        break;
+                    case '#products':
+                        $('.products').show();
+                        $.ajax('{{ route('product.products') }}', {
+                            method: 'GET',
+                            dataType: 'json',
+                            success: function (response) {
+                                $('.products .products').html(renderList(response, 0, 1));
+                            }
+                        })
+                        break;
+                    case '#product':
+                        $('.product').show();
                         break;
                     default:
                         // If all else fails, always default to index
@@ -159,7 +187,6 @@
             var name = $("#name").val();
             var email = $("#email").val();
             var comments = $("#comments").val();
-            console.log(name);
             $.ajax("{{ route('orders.store') }}", {
                 method: 'POST',
                 dataType: 'json',
@@ -178,6 +205,23 @@
                 }
             });
             event.preventDefault();
+        })
+
+        $(document).on('click', '.edit_product', function (event) {
+            console.log('edit product');
+            var data = $(this).attr('data-product-id');
+            $.ajax("{{ url('edit') }}" + "/" + data, {
+                method: "GET",
+                dataType: 'json',
+                success: function (response) {
+                    if (response) {
+                        window.location.hash = 'product';
+                        $('input[name=title]').val(response.title);
+                        $('input[name=description]').val(response.description);
+                        $('input[name=price]').val(response.price);
+                    }
+                }
+            })
         })
     </script>
 </head>
@@ -206,7 +250,7 @@
         <input type="email" id="email" name="email" placeholder={{ trans('E-mail') }} required>
         <br>
         <br>
-        <input type="text"  id='comments' name="comments" placeholder={{ trans("Comments") }}>
+        <input type="text" id='comments' name="comments" placeholder={{ trans("Comments") }}>
         <br>
         <br>
         <input type="submit" name="checkout" value="{{ trans('Checkout') }}">
@@ -230,6 +274,31 @@
 
     <!-- A link to go to the index by changing the hash -->
     <a href="#" class="button">Go to index</a>
+</div>
+
+<div class="page products">
+    <table class="products"></table>
+
+    <!-- A link to go to the cart by changing the hash -->
+    <a href="#cart" class="button">Go to cart</a>
+</div>
+
+<div class="page product">
+    <form enctype="multipart/form-data">
+        Title: <input type="text" name="title" value="" required>
+        <br>
+        <br>
+        Description: <input type="text" name="description" value="" required>
+        <br>
+        <br>
+        Price: <input type="number" step="0.01" name="price" value="" required>
+        <br>
+        <br>
+        <input type="file" name="image" placeholder={{ trans("Image") }}>
+        <br>
+        <br>
+        <input type="submit" name="save" value={{ trans("Save") }}>
+    </form>
 </div>
 
 </body>
