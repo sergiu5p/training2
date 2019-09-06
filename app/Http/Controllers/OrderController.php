@@ -14,12 +14,13 @@ class OrderController extends Controller
 
     public function store(Request $request)
     {
-        $data = $request->all(['name', 'email', 'comments']);
+        $data = $request->all('name', 'email', 'comments');
+
         $insert = Order::query()->create(
             [
-                'name' => $request->name,
-                'email' => $request->email,
-                'comments' => $request->comments
+                'name' => $data['name'],
+                'email' => $data['email'],
+                'comments' => $data['comments']
             ]
         );
         $lastInsertId = $insert->id;
@@ -44,14 +45,15 @@ class OrderController extends Controller
             "comments" => "required"
         ]);
 
-        $name = $request->name;
-        $email = $request->email;
-        $comments = $request->comments;
-
         Mail::to(env('ADMIN_EMAIL', 'purcariu.sergiu@gmail.com'))->send(
-            new sendMail($name, $email, $comments)
+            new sendMail($data['name'], $data['email'], $data['comments'])
         );
         $request->session()->forget('cart');
+
+        if ($request->ajax()) {
+            return ['success' => true];
+        }
+
         return redirect()->route('product.show');
     }
 
