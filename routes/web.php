@@ -11,6 +11,38 @@
 |
 */
 
+Route::group(['middleware' => 'login'], function () {
+
+    Route::resource('orders', 'OrderController')->only(['index', 'show']);
+
+    Route::get('/logout', [
+        'uses' => 'LoginController@logout',
+        'as' => 'logout'
+    ]);
+
+    Route::get('/products', [
+        'uses' => 'ProductController@products',
+        'as' => 'product.products'
+    ]);
+
+
+    Route::get('/delete/{id}', [
+        'uses' => 'ProductController@destroy',
+        'as' => 'product.destroy'
+    ]);
+
+    Route::get('/edit/{id?}', [
+        'uses' => 'ProductController@edit',
+        'as' => 'product.edit'
+    ]);
+
+
+    Route::post('/update/{id?}', [
+        'uses' => 'ProductController@update',
+        'as' => 'update'
+    ]);
+});
+
 Route::get('/spa', function () {
    return view('index');
 });
@@ -36,31 +68,7 @@ Route::post('/login', [
    'as' => 'checkLogin'
 ]);
 
-Route::get('/logout', [
-    'uses' => 'LoginController@logout',
-    'as' => 'logout'
+Route::post('/orders', [
+    'uses' => 'OrderController@store',
+    'as' => 'orders.store'
 ]);
-
-Route::get('/products', [
-    'uses' => 'ProductController@products',
-    'as' => 'product.products'
-]);
-
-// delete
-Route::get('/delete/{id}', [
-   'uses' => 'ProductController@destroy',
-   'as' => 'product.destroy'
-]);
-
-Route::get('/edit/{id?}', [
-    'uses' => 'ProductController@edit',
-    'as' => 'product.edit'
-]);
-
-// Fix that
-Route::post('/update/{id?}', [
-    'uses' => 'ProductController@update',
-    'as' => 'update'
-]);
-
-Route::resource('orders', 'OrderController')->only(['index', 'show', 'store']);
