@@ -136,6 +136,7 @@
                     // Render the products in the index list
                     if (response.success) {
                         alert('Product added to cart');
+                        window.onhashchange();
                     } else {
                         alert('Failed to add');
                     }
@@ -152,6 +153,7 @@
                 success: function (response) {
                     if (response.success) {
                         alert('Product removed from cart');
+                        window.onhashchange();
                     } else {
                         alert('Failed to remove');
                     }
