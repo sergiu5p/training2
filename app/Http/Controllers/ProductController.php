@@ -131,7 +131,7 @@ class ProductController extends Controller
         $index = array_search($id, data_get($request->session()->get('cart'), 'items'));
 
         if ($index !== false) {
-            unset($request->session()->get('cart')->items[$index]);  //data_get
+            unset($request->session()->get('cart')->items[$index]);
         }
         return back();
     }
