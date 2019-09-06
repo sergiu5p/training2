@@ -135,11 +135,10 @@
             console.log('login');
             var username = $("#user_login").val();
             var password = $("#pass_login").val();
-            console.log(username, password);
             $.ajax("{{ route('checkLogin') }}", {
                 method: 'POST',
                 dataType: 'json',
-                data : {
+                data: {
                     username: username,
                     password: password
                 },
@@ -154,6 +153,7 @@
             });
             event.preventDefault();
         })
+
     </script>
 </head>
 <body>
@@ -173,6 +173,19 @@
 
     <!-- A link to go to the index by changing the hash -->
     <a href="#" class="button">Go to index</a>
+
+    <form class="order_form">
+        <input type="text" id="name" name="name" placeholder={{ trans('Name') }} required>
+        <br>
+        <br>
+        <input type="email" id="email" name="email" placeholder={{ trans('E-mail') }} required>
+        <br>
+        <br>
+        <input type="text"  id='comments' name="comments" placeholder={{ trans("Comments") }}>
+        <br>
+        <br>
+        <input type="submit" name="checkout" value="{{ trans('Checkout') }}">
+    </form>
 </div>
 
 <!-- The login page -->
@@ -182,12 +195,17 @@
 
     <form class="login_form">
         <input type="text" id="user_login" name="username" placeholder={{ trans('username') }}>
+        <br>
+        <br>
         <input type="password" id="pass_login" name="password" placeholder={{ trans('password') }}>
+        <br>
+        <br>
         <input type="submit" value={{ trans('Login') }}>
     </form>
 
     <!-- A link to go to the index by changing the hash -->
     <a href="#" class="button">Go to index</a>
 </div>
+
 </body>
 </html>
