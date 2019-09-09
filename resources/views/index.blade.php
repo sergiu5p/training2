@@ -98,11 +98,25 @@
                             dataType: 'json',
                             success: function (response) {
                                 $('.products .products').html(renderList(response, 0, 1));
+                            },
+                            error: function (response) {
+                                if (response.responseJSON.login) {
+                                    window.location.hash = 'login';
+                                }
                             }
                         })
                         break;
                     case '#product':
                         $('.product').show();
+                        break;
+                    case '#logout':
+                        $.ajax('{{ route('logout') }}', {
+                            method: 'GET',
+                            dataType: 'json',
+                            success: function (response) {
+                                window.location.hash = '#';
+                            }
+                        })
                         break;
                     default:
                         // If all else fails, always default to index
@@ -235,6 +249,7 @@
 
     <!-- A link to go to the cart by changing the hash -->
     <a href="#cart" class="button">Go to cart</a>
+    <a href="#logout">Logout</a>
 </div>
 
 <!-- The cart page -->
@@ -244,6 +259,7 @@
 
     <!-- A link to go to the index by changing the hash -->
     <a href="#" class="button">Go to index</a>
+    <a href="#logout">Logout</a>
 
     <form class="order_form">
         <input type="text" id="name" name="name" placeholder={{ trans('Name') }} required>
@@ -279,10 +295,12 @@
 </div>
 
 <div class="page products">
+    <a href="#logout">Logout</a>
+    <a href="#cart" class="button">Go to cart</a>
+    <a href="#" class="button">Go to index</a>
+
     <table class="products"></table>
 
-    <!-- A link to go to the cart by changing the hash -->
-    <a href="#cart" class="button">Go to cart</a>
 </div>
 
 <div class="page product">
