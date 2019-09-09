@@ -69,6 +69,10 @@ class OrderController extends Controller
             ->join(DB::raw('products'), DB::raw('order_product.product_id'), '=', DB::raw('products.id'))
             ->groupBy(DB::raw('order_product.order_id'))->get();
 
+        if ($request->ajax()) {
+            return $orders;
+        }
+
         return view('orders.orders', compact('orders'));
     }
 
