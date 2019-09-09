@@ -88,6 +88,10 @@ class OrderController extends Controller
             ->rightJoin(DB::raw('orders'), DB::raw('order_product.order_id'), '=', DB::raw('orders.id'))
             ->where(DB::raw('order_product.order_id'), '=', DB::raw($id))->get();
 
+        if ($request->ajax()) {
+            return $order;
+        }
+
         return view('orders.order', compact('order'));
     }
 }
