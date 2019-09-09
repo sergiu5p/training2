@@ -222,7 +222,6 @@
             });
             event.preventDefault();
         })
-
         $(document).on('click', '.edit_product', function (event) {
             console.log('edit product');
             var data = $(this).attr('data-product-id');
@@ -239,6 +238,18 @@
                     }
                 }
             })
+        })
+        $(document).on('click', '.delete_product', function (event) {
+            console.log('delete product');
+            var data = $(this).attr('data-product-id');
+            $.ajax("{{ url('delete') }}" + "/" + data, {
+                method: "GET",
+                dataType: 'json',
+                success: function (response) {
+                    window.onhashchange();
+                }
+            })
+            event.preventDefault();
         })
         $(document).on('submit', '.product_form', function (event) {
             console.log('edit/upload product');
@@ -321,6 +332,7 @@
     <a href="#" class="button">Go to index</a>
 
     <table class="products"></table>
+    <a href="spa#product">{{ trans('Add') }}</a>
 
 </div>
 
