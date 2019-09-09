@@ -41,6 +41,9 @@ class LoginController extends Controller
     public function logout(Request $request)
     {
         $request->session()->forget('login');
+        if ($request->ajax()) {
+            return ['success' => true];
+        }
         return redirect()->route('login');
     }
 }
