@@ -28,6 +28,23 @@
              * }]
              */
 
+            function showOrders(orders) {
+                html = [].join('');
+
+                $.each(orders, function (key, order) {
+                    html += [
+                        '<h4>Name: ' + order.name + '</h4>',
+                        '<h4>E-mail: ' + order.email + '</h4>',
+                        '<h4>Comments: ' + order.comments + '</h4>',
+                        '<h4>Summed price: ' + order.summed_price + ' $</h4>',
+                        '<h4>Creation date: ' + order.created_at + '</h4>',
+                        '<a href={{ url('orders.show') }}' +  order.id + '>View</a>'
+                    ].join('');
+                })
+
+                return html;
+            }
+
             function renderList(products, addToCart, edit) {
 
                 html = [
@@ -115,6 +132,16 @@
                             dataType: 'json',
                             success: function (response) {
                                 window.location.hash = '#';
+                            }
+                        })
+                        break;
+                    case '#orders':
+                        $('.orders').show();
+                        $.ajax('{{ route('orders.index') }}', {
+                            method: 'GET',
+                            dataType: 'json',
+                            success: function (response) {
+                                $('.orders .orders').html(showOrders(response));
                             }
                         })
                         break;
@@ -353,6 +380,11 @@
         <br>
         <input type="submit" name="save" value={{ trans("Save") }}>
     </form>
+</div>
+
+<div class="page orders">
+
+    <div class="orders"></div>
 </div>
 
 </body>
