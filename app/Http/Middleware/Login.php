@@ -16,7 +16,7 @@ class Login
     public function handle($request, Closure $next)
     {
         if (!$request->session()->has('login') && $request->ajax()) {
-            return ['login' => false];
+            return response()->json(['login' => true], 403);
         }
         return $next($request);
     }
