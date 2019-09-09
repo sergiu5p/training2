@@ -167,6 +167,11 @@ class ProductController extends Controller
         File::delete(storage_path('app/images/'). $product->id . '.' . $product->image_extension);
 
         Product::query()->where('id', $id)->delete();
+
+        if ($request->ajax()) {
+            return ['success' => true];
+        }
+
         return back();
     }
 }
