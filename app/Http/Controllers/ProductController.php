@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use App\Cart;
 use App\Product;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\File;
@@ -60,7 +59,7 @@ class ProductController extends Controller
      *
      * @param  \Illuminate\Http\Request  $request
      * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @return array
      */
     public function update(Request $request, $id = null)
     {
@@ -117,6 +116,10 @@ class ProductController extends Controller
                 ]
             );
             $validatedData['image']->move(storage_path('app/images/'), $product->id . '.' . $validatedData['image']->extension());
+        }
+
+        if ($request->ajax()) {
+            return ['success' => true];
         }
 
         return redirect()->route('product.products');
