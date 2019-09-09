@@ -232,12 +232,33 @@
                 success: function (response) {
                     if (response) {
                         window.location.hash = 'product';
+                        $('input[name=product_id]').val(response.id);
                         $('input[name=title]').val(response.title);
                         $('input[name=description]').val(response.description);
                         $('input[name=price]').val(response.price);
                     }
                 }
             })
+        })
+        $(document).on('submit', '.product_form', function (event) {
+            console.log('edit/upload product');
+
+            var product_id = $('#product_id').val();
+            var url;
+            url = (product_id ? "{{ url('update') }}" + '/' + product_id : "{{ url('update') }}");
+            $.ajax({
+                url: url,
+                method: "POST",
+                data: new FormData(this),
+                dataType: 'json',
+                contentType: false,
+                cache: false,
+                processData: false,
+                success: function(response) {
+                    window.location.hash = 'products';
+                }
+            })
+            event.preventDefault();
         })
     </script>
 </head>
@@ -304,17 +325,18 @@
 </div>
 
 <div class="page product">
-    <form enctype="multipart/form-data">
-        Title: <input type="text" name="title" value="" required>
+    <form class="product_form" enctype="multipart/form-data">
+        <input id="product_id" type="hidden" name="product_id" value="">
+        Title: <input id="product_title" type="text" name="title" value="" required>
         <br>
         <br>
-        Description: <input type="text" name="description" value="" required>
+        Description: <input id="product_description" type="text" name="description" value="" required>
         <br>
         <br>
-        Price: <input type="number" step="0.01" name="price" value="" required>
+        Price: <input id="product_price" type="number" step="0.01" name="price" value="" required>
         <br>
         <br>
-        <input type="file" name="image" placeholder={{ trans("Image") }}>
+        <input id="product_image" type="file" name="image" placeholder={{ trans("Image") }}>
         <br>
         <br>
         <input type="submit" name="save" value={{ trans("Save") }}>
