@@ -21,6 +21,8 @@
             return html;
         }
 
+        var login_session = "<?= request()->session()->has('login') ?>";
+        var cart = <?= json_encode(data_get(request()->session()->get('cart'), 'items')) ?>;
         $(document).ready(function () {
             $.ajaxSetup({
                 headers: {
@@ -103,6 +105,19 @@
             window.onhashchange = function () {
                 // First hide all the pages
                 $('.page').hide();
+                $('.links').hide();
+
+                if (login_session) {
+                    $('.user_links').show();
+                } else {
+                    $('.visitor_links').show();
+                }
+
+                if (cart.length) {
+                    $('.show_cart').show();
+                } else {
+                    $('.hide_cart').show();
+                }
 
                 switch (window.location.hash) {
                     case '#cart':
@@ -146,7 +161,8 @@
                         $.ajax('{{ route('logout') }}', {
                             method: 'GET',
                             dataType: 'json',
-                            success: function (response) {
+                            success: function () {
+                                login_session = false;
                                 window.location.hash = '#';
                             }
                         });
@@ -185,7 +201,7 @@
         });
 
         $(document).on('click', '.add_to_cart', function () {
-            console.log('add_to_cart');
+            // console.log('add_to_cart');
             $.ajax('{{ route('cart.store') }}', {
                 method: 'POST',
                 dataType: 'json',
@@ -193,6 +209,7 @@
                     product_id: $(this).attr('data-product-id')
                 },
                 success: function (response) {
+                    cart = response.productsInCart;
                     // Render the products in the index list
                     if (response.success) {
                         alert('Product added to cart');
@@ -205,12 +222,13 @@
         });
 
         $(document).on('click', '.remove_from_cart', function () {
-            console.log('remove_from_cart');
+            // console.log('remove_from_cart');
             var data = $(this).attr('data-product-id');
             $.ajax("{{ url('cart') }}" + "/" + data, {
                 method: 'DELETE',
                 dataType: 'json',
                 success: function (response) {
+                    cart = response.productsInCart;
                     if (response.success) {
                         alert('Product removed from cart');
                         window.onhashchange();
@@ -222,7 +240,7 @@
         })
 
         $(document).on('submit', '.login_form', function (event) {
-            console.log('login');
+            // console.log('login');
             var username = $("#user_login").val();
             var password = $("#pass_login").val();
             $.ajax("{{ route('checkLogin') }}", {
@@ -234,6 +252,7 @@
                 },
                 success: function (response) {
                     if (response.success) {
+                        login_session = true;
                         alert('Login succesfull');
                         window.location.hash = 'cart';
                     } else {
@@ -245,7 +264,7 @@
         })
 
         $(document).on('submit', '.order_form', function (event) {
-            console.log('Make new order');
+            // console.log('Make new order');
             var name = $("#name").val();
             var email = $("#email").val();
             var comments = $("#comments").val();
@@ -269,7 +288,7 @@
             event.preventDefault();
         })
         $(document).on('click', '.edit_product', function (event) {
-            console.log('edit product');
+            // console.log('edit product');
             var data = $(this).attr('data-product-id');
             $.ajax("{{ url('edit') }}" + "/" + data, {
                 method: "GET",
@@ -286,7 +305,7 @@
             });
         });
         $(document).on('click', '.delete_product', function (event) {
-            console.log('delete product');
+            // console.log('delete product');
             var data = $(this).attr('data-product-id');
             $.ajax("{{ url('delete') }}" + "/" + data, {
                 method: "GET",
@@ -298,7 +317,7 @@
             event.preventDefault();
         });
         $(document).on('submit', '.product_form', function (event) {
-            console.log('edit/upload product');
+            // console.log('edit/upload product');
 
             var product_id = $('#product_id').val();
             var url;
@@ -318,7 +337,7 @@
             event.preventDefault();
         });
         $(document).on('click', '.show_order', function () {
-            console.log('show order');
+            // console.log('show order');
             var data = $(this).attr('data-order-id');
             $.ajax("{{ url('orders') }}" + '/' + data, {
                 method: "GET",
@@ -334,21 +353,29 @@
 </head>
 <body>
     <ul>
-        @if (request()->session()->has('login'))
-            <li><a href='spa#logout'>{{ trans('Logout') }}</a></li>
-            <li><a href='spa#products'>products.php</a></li>
-            <li><a href='spa#orders'>orders.php</a></li>
-        @else
-            <li><a href='spa#login'>{{ trans('Login') }}</a></li>
-        @endif
+{{--        @if (request()->session()->has('login'))--}}
+            <div class="links user_links">
+                <li><a href='spa#logout'>{{ trans('Logout') }}</a></li>
+                <li><a href='spa#products'>products.php</a></li>
+                <li><a href='spa#orders'>orders.php</a></li>
+            </div>
+{{--        @else--}}
+            <div class="links visitor_links">
+                <li><a href='spa#login'>{{ trans('Login') }}</a></li>
+            </div>
+{{--        @endif--}}
 
         <li><a href='spa#'>index.php</a></li>
 
-        @if (request()->session()->has('cart') && request()->session()->get('cart')->items)
-            <li><a href='spa#cart'>{{ trans('Go to cart') }}</a></li>
-        @else
-            <li>{{ trans('Cart is empty') }}</li>
-        @endif
+{{--        @if (request()->session()->has('cart') && request()->session()->get('cart')->items)--}}
+            <div class="links show_cart">
+                <li><a href='spa#cart'>{{ trans('Go to cart') }}</a></li>
+            </div>
+{{--        @else--}}
+            <div class="links hide_cart">
+                <li>{{ trans('Cart is empty') }}</li>
+            </div>
+{{--        @endif--}}
     </ul>
     <div>@yield('content')</div>
 </body>
