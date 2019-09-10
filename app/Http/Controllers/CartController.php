@@ -39,7 +39,10 @@ class CartController extends Controller
         $request->session()->put('cart', $cart);
 
         if ($request->ajax()) {
-            return ['success' => true];
+            return [
+                'success' => true,
+                'productsInCart' => data_get($request->session()->get('cart'), 'items')
+                ];
         }
 
         return redirect()->route('product.show');
@@ -54,7 +57,10 @@ class CartController extends Controller
         }
 
         if ($request->ajax()) {
-            return ['success' => true];
+            return [
+                'success' => true,
+                'productsInCart' => data_get($request->session()->get('cart'), 'items')
+            ];
         }
         return back();
     }
