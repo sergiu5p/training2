@@ -97,8 +97,11 @@ class ProductController extends Controller
                 'title' => $validatedData['title'],
                 'description' => $validatedData['description'],
                 'price' => $validatedData['price'],
-                'image_extension' => $validatedData['image']->extension()
             ];
+
+            if (isset($validatedData['image'])) {
+                $toUpdate  = array_merge($toUpdate, ['image_extension' => $validatedData['image']->extension()]);
+            }
             $product = Product::query()->findOrFail($id);
             if (isset($validatedData['image'])) {
                 File::delete(public_path('/images/') . $product->id . '.' . $product->image_extension);
