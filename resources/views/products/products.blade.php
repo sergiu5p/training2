@@ -12,7 +12,11 @@
             <p>{{ $product->description }}</p>
             <h4>{{ $product->price }}</h4>
             <a href={{ route('product.edit', $product->id) }}>{{ trans("Edit") }}</a>
-            <a href={{ route('product.destroy', $product->id) }}>{{ trans("Remove") }}</a>
+            <form method="POST" action={{ route('product.destroy', $product->id) }}>
+                @csrf
+                @method('DELETE')
+                <button>{{ trans("Remove") }}</button>
+            </form>
         </div>
     @endforeach
     <a href={{ route('product.edit') }}>{{ trans('Add') }}</a>
