@@ -100,8 +100,8 @@ class ProductController extends Controller
             ];
             $product = Product::query()->findOrFail($id);
             if (isset($validatedData['image'])) {
-                File::delete(storage_path('app/images/') . $product->id . '.' . $product->image_extension);
-                $validatedData['image']->move(storage_path('app/images/'), $product->id . '.' . $validatedData['image']->extension());
+                File::delete(public_path('/images/') . $product->id . '.' . $product->image_extension);
+                $validatedData['image']->move(public_path('/images/'), $product->id . '.' . $validatedData['image']->extension());
                 $toUpdate = array_merge($toUpdate, ['image_extension' => $validatedData['image']->extension()]);
             }
             $product->fill($toUpdate);
@@ -115,7 +115,7 @@ class ProductController extends Controller
                     'image_extension' => $validatedData['image']->extension()
                 ]
             );
-            $validatedData['image']->move(storage_path('app/images/'), $product->id . '.' . $validatedData['image']->extension());
+            $validatedData['image']->move(public_path('/images/'), $product->id . '.' . $validatedData['image']->extension());
         }
 
         if ($request->ajax()) {
@@ -164,7 +164,7 @@ class ProductController extends Controller
         }
 
         $product = Product::query()->findOrFail($id, ['id', 'image_extension']);
-        File::delete(storage_path('app/images/'). $product->id . '.' . $product->image_extension);
+        File::delete(public_path('/images/'). $product->id . '.' . $product->image_extension);
 
         Product::query()->where('id', $id)->delete();
 
