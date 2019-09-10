@@ -7,20 +7,12 @@
 <div class="page index">
     <!-- The index element where the products list is rendered -->
     <table class="list"></table>
-
-    <!-- A link to go to the cart by changing the hash -->
-    <a href="#cart" class="button">Go to cart</a>
-    <a href="#logout">Logout</a>
 </div>
 
 <!-- The cart page -->
 <div class="page cart">
     <!-- The cart element where the products list is rendered -->
     <table class="list"></table>
-
-    <!-- A link to go to the index by changing the hash -->
-    <a href="#" class="button">Go to index</a>
-    <a href="#logout">Logout</a>
 
     <form class="order_form">
         <input type="text" id="name" name="name" placeholder={{ trans('Name') }} required>
@@ -50,15 +42,9 @@
         <br>
         <input type="submit" value={{ trans('Login') }}>
     </form>
-
-    <!-- A link to go to the index by changing the hash -->
-    <a href="#" class="button">Go to index</a>
 </div>
 
 <div class="page products">
-    <a href="#logout">Logout</a>
-    <a href="#cart" class="button">Go to cart</a>
-    <a href="#" class="button">Go to index</a>
 
     <table class="products"></table>
     <a href="spa#product">{{ trans('Add') }}</a>
