@@ -6,3 +6,7 @@ ul li {
 .order {
     padding-top: 10px;
 }
+
+.links {
+    display: inline;
+}
