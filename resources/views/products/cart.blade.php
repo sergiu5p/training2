@@ -3,7 +3,7 @@
 @section('title', 'cart')
 
 @section('content')
-A
+
     @foreach($products as $product)
         <div>
             <img alt={{ $product->title }} src={{ "/images/".$product->id.".".$product->image_extension }} width="150" height="150">

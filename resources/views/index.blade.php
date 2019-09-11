@@ -14,7 +14,7 @@
     <!-- The cart element where the products list is rendered -->
     <table class="list"></table>
 
-    <form class="order_form">
+    <form method="POST" class="order_form">
         <input type="text" id="name" name="name" placeholder={{ trans('Name') }} required>
         <br>
         <br>
@@ -46,7 +46,7 @@
 
 <div class="page products">
 
-    <table class="products"></table>
+    <table class="products-list"></table>
     <a href="spa#product">{{ trans('Add') }}</a>
 
 </div>

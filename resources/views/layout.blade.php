@@ -9,7 +9,14 @@
 <body>
     <ul>
         @if (request()->session()->has('login'))
-            <li><a href={{ route('logout') }}>{{ trans('Logout') }}</a></li>
+
+            <li>
+                <form method="POST" action={{ route('logout') }}>
+                    @csrf
+
+                    <button type="submit">{{ trans('Logout') }}</button>
+                </form>
+            </li>
             <li><a href={{ route('product.products') }}>products.php</a></li>
             <li><a href={{ route('orders.index') }}>orders.php</a></li>
         @else
