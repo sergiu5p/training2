@@ -9,15 +9,19 @@
     <!-- Custom JS script -->
     <script type="text/javascript">
         function showOrder(order) {
+            var sum = 0;
             html = [
-                '<h4>Name: ' + order[0].name + '</h4>',
-                '<h4>E-mail: ' + order[0].email + '</h4>',
-                '<h4>Comments: ' + order[0].comments + '</h4>',
+                '<h4>Name: ' + order.name + '</h4>',
+                '<h4>E-mail: ' + order.email + '</h4>',
+                '<h4>Comments: ' + order.comments + '</h4>',
             ].join('');
-            $.each(order, function (key, ord) {
-                html += ['<h4>' + ord.title + '</h4>'].join('');
+            $.each(order.products, function (key, ord) {
+                sum += Number(ord.price)
+                html += [
+                    '<h4>' + ord.title + '</h4>',
+                ].join('');
             })
-
+            html +=  '<h4>' + sum.toFixed(2) + '</h4>';
             return html;
         }
 
@@ -50,11 +54,15 @@
                 html = [].join('');
 
                 $.each(orders, function (key, order) {
+                    var sum = 0;
+                    $.each(order.products, function (key, product) {
+                        sum += Number(product.price);
+                    }) 
                     html += [
                         '<h4>Name: ' + order.name + '</h4>',
                         '<h4>E-mail: ' + order.email + '</h4>',
                         '<h4>Comments: ' + order.comments + '</h4>',
-                        '<h4>Summed price: ' + order.summed_price + ' $</h4>',
+                        '<h4>Summed price: ' + sum.toFixed(2) + ' $</h4>',
                         '<h4>Creation date: ' + order.created_at + '</h4>',
                         '<button class="show_order" data-order-id="' + order.id + '">View</button>'
                     ].join('');

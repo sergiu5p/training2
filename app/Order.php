@@ -11,4 +11,9 @@ class Order extends Model
         "email",
         "comments"
     ];
+
+    public function products()
+    {
+        return $this->belongsToMany(Product::class);
+    }
 }
