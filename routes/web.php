@@ -15,7 +15,7 @@ Route::group(['middleware' => 'login'], function () {
 
     Route::resource('orders', 'OrderController')->only(['index', 'show']);
 
-    Route::get('/logout', [
+    Route::post('/logout', [
         'uses' => 'LoginController@logout',
         'as' => 'logout'
     ]);
@@ -26,7 +26,7 @@ Route::group(['middleware' => 'login'], function () {
     ]);
 
 
-    Route::get('/delete/{id}', [
+    Route::delete('/delete/{id}', [
         'uses' => 'ProductController@destroy',
         'as' => 'product.destroy'
     ]);
