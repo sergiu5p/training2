@@ -113,7 +113,7 @@
                     $('.visitor_links').show();
                 }
 
-                if (cart.length) {
+                if (cart && cart.length) {
                     $('.show_cart').show();
                 } else {
                     $('.hide_cart').show();
@@ -128,9 +128,6 @@
                             method: 'GET',
                             dataType: 'json',
                             success: function (response) {
-                                if (response.login) {
-                                    hash = 'login';
-                                }
                                 // Render the products in the cart list
                                 $('.cart .list').html(renderList(response));
                             }
@@ -145,7 +142,7 @@
                             method: 'GET',
                             dataType: 'json',
                             success: function (response) {
-                                $('.products .products').html(renderList(response, 0, 1));
+                                $('.products .products-list').html(renderList(response, 0, 1));
                             },
                             error: function (response) {
                                 if (response.responseJSON.login) {
@@ -159,7 +156,7 @@
                         break;
                     case '#logout':
                         $.ajax('{{ route('logout') }}', {
-                            method: 'GET',
+                            method: 'POST',
                             dataType: 'json',
                             success: function () {
                                 login_session = false;
@@ -201,7 +198,6 @@
         });
 
         $(document).on('click', '.add_to_cart', function () {
-            // console.log('add_to_cart');
             $.ajax('{{ route('cart.store') }}', {
                 method: 'POST',
                 dataType: 'json',
@@ -222,7 +218,6 @@
         });
 
         $(document).on('click', '.remove_from_cart', function () {
-            // console.log('remove_from_cart');
             var data = $(this).attr('data-product-id');
             $.ajax("{{ url('cart') }}" + "/" + data, {
                 method: 'DELETE',
@@ -237,10 +232,9 @@
                     }
                 }
             })
-        })
+        });
 
         $(document).on('submit', '.login_form', function (event) {
-            // console.log('login');
             var username = $("#user_login").val();
             var password = $("#pass_login").val();
             $.ajax("{{ route('checkLogin') }}", {
@@ -264,17 +258,13 @@
         })
 
         $(document).on('submit', '.order_form', function (event) {
-            // console.log('Make new order');
-            var name = $("#name").val();
-            var email = $("#email").val();
-            var comments = $("#comments").val();
             $.ajax("{{ route('orders.store') }}", {
                 method: 'POST',
                 dataType: 'json',
                 data: {
-                    name: name,
-                    email: email,
-                    comments: comments
+                    name: $("#name").val(),
+                    email: $("#email").val(),
+                    comments: $("#comments").val(),
                 },
                 success: function (response) {
                     if (response.success) {
@@ -286,9 +276,9 @@
                 }
             });
             event.preventDefault();
-        })
+        });
+
         $(document).on('click', '.edit_product', function (event) {
-            // console.log('edit product');
             var data = $(this).attr('data-product-id');
             $.ajax("{{ url('edit') }}" + "/" + data, {
                 method: "GET",
@@ -304,11 +294,11 @@
                 }
             });
         });
+
         $(document).on('click', '.delete_product', function (event) {
-            // console.log('delete product');
             var data = $(this).attr('data-product-id');
             $.ajax("{{ url('delete') }}" + "/" + data, {
-                method: "GET",
+                method: "DELETE",
                 dataType: 'json',
                 success: function (response) {
                     window.onhashchange();
@@ -316,9 +306,8 @@
             });
             event.preventDefault();
         });
-        $(document).on('submit', '.product_form', function (event) {
-            // console.log('edit/upload product');
 
+        $(document).on('submit', '.product_form', function (event) {
             var product_id = $('#product_id').val();
             var url;
             url = (product_id ? "{{ url('update') }}" + '/' + product_id : "{{ url('update') }}");
@@ -336,8 +325,8 @@
             });
             event.preventDefault();
         });
+
         $(document).on('click', '.show_order', function () {
-            // console.log('show order');
             var data = $(this).attr('data-order-id');
             $.ajax("{{ url('orders') }}" + '/' + data, {
                 method: "GET",
@@ -352,31 +341,25 @@
     <title></title>
 </head>
 <body>
-    <ul>
-{{--        @if (request()->session()->has('login'))--}}
-            <div class="links user_links">
-                <li><a href='spa#logout'>{{ trans('Logout') }}</a></li>
-                <li><a href='spa#products'>products.php</a></li>
-                <li><a href='spa#orders'>orders.php</a></li>
-            </div>
-{{--        @else--}}
-            <div class="links visitor_links">
-                <li><a href='spa#login'>{{ trans('Login') }}</a></li>
-            </div>
-{{--        @endif--}}
+<ul>
+    <div class="links user_links">
+        <li><a href='spa#logout'>{{ trans('Logout') }}</a></li>
+        <li><a href='spa#products'>products.php</a></li>
+        <li><a href='spa#orders'>orders.php</a></li>
+    </div>
+    <div class="links visitor_links">
+        <li><a href='spa#login'>{{ trans('Login') }}</a></li>
+    </div>
 
-        <li><a href='spa#'>index.php</a></li>
+    <li><a href='spa#'>index.php</a></li>
 
-{{--        @if (request()->session()->has('cart') && request()->session()->get('cart')->items)--}}
-            <div class="links show_cart">
-                <li><a href='spa#cart'>{{ trans('Go to cart') }}</a></li>
-            </div>
-{{--        @else--}}
-            <div class="links hide_cart">
-                <li>{{ trans('Cart is empty') }}</li>
-            </div>
-{{--        @endif--}}
-    </ul>
+    <div class="links show_cart">
+        <li><a href='spa#cart'>{{ trans('Go to cart') }}</a></li>
+    </div>
+    <div class="links hide_cart">
+        <li>{{ trans('Cart is empty') }}</li>
+    </div>
+</ul>
     <div>@yield('content')</div>
 </body>
 </html>
