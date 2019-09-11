@@ -14,18 +14,32 @@ class OrderController extends Controller
 
     public function store(Request $request)
     {
-        $data = $request->all('name', 'email', 'comments');
+        $validatedData = $request->validate([
+            'name' => ['bail',
+                'required',
+                'string',
+            ],
+
+            'email' => ['required',
+                    'email',
+                ],
+
+            'comments' => [
+                'required',
+            ]
+        ]);
+
+//        $data = $request->all('name', 'email', 'comments');
 
         $insert = Order::query()->create(
             [
-                'name' => $data['name'],
-                'email' => $data['email'],
-                'comments' => $data['comments']
+                'name' => $validatedData['name'],
+                'email' => $validatedData['email'],
+                'comments' => $validatedData['comments']
             ]
         );
         $lastInsertId = $insert->id;
 
-        // comment
         $products = Product::query()
             ->whereIn('id', data_get($request->session()->get('cart'), 'items'))
             ->get();
@@ -39,14 +53,8 @@ class OrderController extends Controller
            );
         });
 
-        $this->validate($request, [
-            "name" => "required|string",
-            "email" => "required|email",
-            "comments" => "required"
-        ]);
-
         Mail::to(env('ADMIN_EMAIL', 'purcariu.sergiu@gmail.com'))->send(
-            new sendMail($data['name'], $data['email'], $data['comments'])
+            new sendMail($validatedData['name'], $validatedData['email'], $validatedData['comments'])
         );
         $request->session()->forget('cart');
 
@@ -65,8 +73,8 @@ class OrderController extends Controller
 
         $orders = DB::table(DB::raw('order_product'))
             ->select(DB::raw('orders.*'), DB::raw("SUM(products.price) AS summed_price"))
-            ->join(DB::raw('orders'), DB::raw('order_product.order_id'), '=', DB::raw('orders.id'))
-            ->join(DB::raw('products'), DB::raw('order_product.product_id'), '=', DB::raw('products.id'))
+            ->leftJoin(DB::raw('orders'), DB::raw('order_product.order_id'), '=', DB::raw('orders.id'))
+            ->leftJoin(DB::raw('products'), DB::raw('order_product.product_id'), '=', DB::raw('products.id'))
             ->groupBy(DB::raw('order_product.order_id'))->get();
 
         if ($request->ajax()) {
