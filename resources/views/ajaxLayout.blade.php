@@ -317,7 +317,6 @@
                 data: new FormData(this),
                 dataType: 'json',
                 contentType: false,
-                cache: false,
                 processData: false,
                 success: function(response) {
                     window.location.hash = 'products';
