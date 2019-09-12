@@ -77,10 +77,10 @@
         Title: <input id="create_product_title" type="text" name="title" required>
         <br>
         <br>
-        Description: <input id="create_product_description" type="text" name="description" required>
+        Description: <input type="text" name="description" required>
         <br>
         <br>
-        Price: <input id="create_product_price" type="number" step="0.01" name="price" required>
+        Price: <input type="number" step="0.01" name="price" required>
         <br>
         <br>
         <input type="file" name="image" placeholder={{ trans("Image") }} required>

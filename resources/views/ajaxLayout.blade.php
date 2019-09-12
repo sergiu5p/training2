@@ -162,9 +162,6 @@
                         $('.product').show();
                         break;
                     case '#create':
-                        $("#create_product_title").val("");
-                        $("#create_product_description").val("");
-                        $("#create_product_price").val("");
                         $('.create').show();
                         break;
                     case '#logout':
@@ -299,10 +296,10 @@
                 success: function (response) {
                     if (response) {
                         window.location.hash = 'product';
-                        $('input[name=product_id]').val(response.id);
-                        $('input[name=title]').val(response.title);
-                        $('input[name=description]').val(response.description);
-                        $('input[name=price]').val(response.price);
+                        $('#product_id').val(response.id);
+                        $('#product_title').val(response.title);
+                        $('#product_description').val(response.description);
+                        $('#product_price').val(response.price);
                     }
                 }
             });
