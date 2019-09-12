@@ -15,8 +15,12 @@ class Login
      */
     public function handle($request, Closure $next)
     {
-        if (!$request->session()->has('login') && $request->ajax()) {
-            return response()->json(['login' => true], 403);
+        if (!$request->session()->has('login')) {
+            if ($request->ajax()) {
+                return response()->json(['login' => true], 403);
+
+            }
+            return redirect()->route('login');
         }
         return $next($request);
     }

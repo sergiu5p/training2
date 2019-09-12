@@ -42,9 +42,6 @@ class ProductController extends Controller
      */
     public function edit(Request $request, $id = null)
     {
-        if (!$request->session()->has('login')) {
-            return redirect()->route('login');
-        }
         $product = $id ? Product::query()->findOrFail($id) : new Product();
 
         if ($request->ajax()) {
@@ -63,9 +60,6 @@ class ProductController extends Controller
      */
     public function update(Request $request, $id = null)
     {
-        if (!$request->session()->has('login')) {
-            return redirect()->route('login');
-        }
 
         $unique = Rule::unique('products');
         if ($id) {
@@ -136,9 +130,6 @@ class ProductController extends Controller
      */
     public function removeFromCart(Request $request, $id)
     {
-        if (!$request->session()->has('login')) {
-            return redirect()->route('login');
-        }
         $index = array_search($id, data_get($request->session()->get('cart'), 'items'));
 
         if ($index !== false) {
@@ -149,9 +140,6 @@ class ProductController extends Controller
 
     public function products(Request $request)
     {
-        if (!$request->session()->has('login')) {
-            return redirect()->route('login');
-        }
         $products = Product::all();
         if ($request->ajax()) {
             return $products;
@@ -162,9 +150,6 @@ class ProductController extends Controller
 
     public function destroy(Request $request, $id)
     {
-        if (!$request->session()->has('login')) {
-            return redirect()->route('login');
-        }
 
         $product = Product::query()->findOrFail($id, ['id', 'image_extension']);
         File::delete(public_path('/images/'). $product->id . '.' . $product->image_extension);
