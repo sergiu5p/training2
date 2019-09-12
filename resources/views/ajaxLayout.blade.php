@@ -162,6 +162,9 @@
                     case '#product':
                         $('.product').show();
                         break;
+                    case '#create':
+                        $('.create').show();
+                        break;
                     case '#logout':
                         $.ajax('{{ route('logout') }}', {
                             method: 'POST',
@@ -315,10 +318,25 @@
             event.preventDefault();
         });
 
-        $(document).on('submit', '.product_form', function (event) {
+        $(document).on('submit', '.product_edit', function (event) {
             var product_id = $('#product_id').val();
-            var url;
-            url = (product_id ? "{{ url('update') }}" + '/' + product_id : "{{ url('update') }}");
+            var url = "{{ url('update') }}" + '/' + product_id;
+            $.ajax({
+                url: url,
+                method: "POST",
+                data: new FormData(this),
+                dataType: 'json',
+                contentType: false,
+                processData: false,
+                success: function(response) {
+                    window.location.hash = 'products';
+                }
+            });
+            event.preventDefault();
+        });
+
+        $(document).on('submit', '.product_create', function (event) {
+            var url = "{{ route('product.store') }}";
             $.ajax({
                 url: url,
                 method: "POST",

@@ -47,12 +47,12 @@
 <div class="page products">
 
     <table class="products-list"></table>
-    <a href="spa#product">{{ trans('Add') }}</a>
+    <a href="spa#create">{{ trans('Add') }}</a>
 
 </div>
 
 <div class="page product">
-    <form class="product_form" enctype="multipart/form-data">
+    <form class="product_edit" enctype="multipart/form-data">
         <input id="product_id" type="hidden" name="product_id" value="">
         Title: <input id="product_title" type="text" name="title" value="" required>
         <br>
@@ -64,6 +64,24 @@
         <br>
         <br>
         <input id="product_image" type="file" name="image" placeholder={{ trans("Image") }}>
+        <br>
+        <br>
+        <input type="submit" name="save" value={{ trans("Save") }}>
+    </form>
+</div>
+
+<div class="page create">
+    <form class="product_create" enctype="multipart/form-data">
+        Title: <input type="text" name="title" required>
+        <br>
+        <br>
+        Description: <input type="text" name="description" value="" required>
+        <br>
+        <br>
+        Price: <input type="number" step="0.01" name="price" value="" required>
+        <br>
+        <br>
+        <input type="file" name="image" placeholder={{ trans("Image") }} required>
         <br>
         <br>
         <input type="submit" name="save" value={{ trans("Save") }}>
