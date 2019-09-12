@@ -18,7 +18,6 @@ class Login
         if (!$request->session()->has('login')) {
             if ($request->ajax()) {
                 return response()->json(['login' => true], 403);
-
             }
             return redirect()->route('login');
         }
