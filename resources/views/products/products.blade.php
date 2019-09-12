@@ -19,6 +19,6 @@
             </form>
         </div>
     @endforeach
-    <a href={{ route('product.edit') }}>{{ trans('Add') }}</a>
+    <a href="{{ action('ProductController@create') }}">{{ trans('Add') }}</a>
 
 @endsection

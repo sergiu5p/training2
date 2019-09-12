@@ -40,15 +40,15 @@ class ProductController extends Controller
      * @param  int  $id
      * @return Product|\Illuminate\Database\Eloquent\Builder|\Illuminate\Database\Eloquent\Builder[]|\Illuminate\Database\Eloquent\Collection|\Illuminate\Database\Eloquent\Model
      */
-    public function edit(Request $request, $id = null)
+    public function edit(Request $request, $id)
     {
-        $product = $id ? Product::query()->findOrFail($id) : new Product();
+        $product = Product::query()->findOrFail($id);
 
         if ($request->ajax()) {
             return $product;
         }
 
-        return view('products.product', compact('product'));
+        return view('products.edit', compact('product'));
     }
 
     /**
@@ -58,13 +58,11 @@ class ProductController extends Controller
      * @param  int  $id
      * @return array
      */
-    public function update(Request $request, $id = null)
+    public function update(Request $request, $id)
     {
 
         $unique = Rule::unique('products');
-        if ($id) {
-            $unique = $unique->ignore(Product::query()->findOrFail($id));
-        }
+        $unique = $unique->ignore(Product::query()->findOrFail($id));
 
         $validatedData = $request->validate([
             'title' => ['bail',
@@ -86,34 +84,23 @@ class ProductController extends Controller
                         ],
         ]);
 
-        if ($id) {
-            $toUpdate = [
-                'title' => $validatedData['title'],
-                'description' => $validatedData['description'],
-                'price' => $validatedData['price'],
-            ];
+        $toUpdate = [
+            'title' => $validatedData['title'],
+            'description' => $validatedData['description'],
+            'price' => $validatedData['price'],
+        ];
 
-            if (isset($validatedData['image'])) {
-                $toUpdate  = array_merge($toUpdate, ['image_extension' => $validatedData['image']->extension()]);
-            }
-            $product = Product::query()->findOrFail($id);
-            if (isset($validatedData['image'])) {
-                File::delete(public_path('/images/') . $product->id . '.' . $product->image_extension);
-                $validatedData['image']->move(public_path('/images/'), $product->id . '.' . $validatedData['image']->extension());
-            }
-            $product->fill($toUpdate);
-            $product->save();
-        } else {
-            $product = Product::query()->create(
-                [
-                    'title' => $validatedData['title'],
-                    'description' => $validatedData['description'],
-                    'price' => $validatedData['price'],
-                    'image_extension' => $validatedData['image']->extension()
-                ]
-            );
+        if (isset($validatedData['image'])) {
+            $toUpdate  = array_merge($toUpdate, ['image_extension' => $validatedData['image']->extension()]);
+        }
+        $product = Product::query()->findOrFail($id);
+        
+        if (isset($validatedData['image'])) {
+            File::delete(public_path('/images/') . $product->id . '.' . $product->image_extension);
             $validatedData['image']->move(public_path('/images/'), $product->id . '.' . $validatedData['image']->extension());
         }
+        $product->fill($toUpdate);
+        $product->save();
 
         if ($request->ajax()) {
             return ['success' => true];
@@ -122,20 +109,53 @@ class ProductController extends Controller
         return redirect()->route('product.products');
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function removeFromCart(Request $request, $id)
+    public function create(Request $request)
     {
-        $index = array_search($id, data_get($request->session()->get('cart'), 'items'));
-
-        if ($index !== false) {
-            unset($request->session()->get('cart')->items[$index]);
+        
+        if ($request->ajax()) {
+            return ['success' => true];
         }
-        return back();
+
+        return view('products.create');
+    }
+
+    public function store(Request $request)
+    {
+        $validatedData = $request->validate([
+            'title' => ['bail',
+                        'required',
+                        'max:255',
+                        'unique:products',
+                        ],
+
+            'description' => ['required'],
+
+            'price' => [
+                        'required',
+                        'numeric'
+                        ],
+
+            'image' => [
+                        'image',
+                        'required'
+                        ],
+        ]);
+
+        $product = Product::query()->create(
+            [
+                'title' => $validatedData['title'],
+                'description' => $validatedData['description'],
+                'price' => $validatedData['price'],
+                'image_extension' => $validatedData['image']->extension()
+            ]
+        );
+        $validatedData['image']->move(public_path('/images/'), $product->id . '.' . $validatedData['image']->extension());
+
+        if ($request->ajax()) {
+            return ['success' => true];
+        }
+
+        return redirect()->route('product.products');
     }
 
     public function products(Request $request)

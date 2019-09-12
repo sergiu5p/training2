@@ -25,19 +25,27 @@ Route::group(['middleware' => 'login'], function () {
         'as' => 'product.products'
     ]);
 
-
     Route::delete('/delete/{id}', [
         'uses' => 'ProductController@destroy',
         'as' => 'product.destroy'
     ]);
 
-    Route::get('/edit/{id?}', [
+    Route::get('/edit/{id}', [
         'uses' => 'ProductController@edit',
         'as' => 'product.edit'
     ]);
 
+    Route::get('/products/create', [
+        'uses' => 'ProductController@create',
+        'as' => 'product.create'
+    ]);
 
-    Route::post('/update/{id?}', [
+    Route::post('/products', [
+        'uses' => 'ProductController@store',
+        'as' => 'product.store'
+    ]);
+
+    Route::post('/update/{id}', [
         'uses' => 'ProductController@update',
         'as' => 'update'
     ]);

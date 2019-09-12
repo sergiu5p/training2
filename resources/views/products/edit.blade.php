@@ -1,6 +1,6 @@
 @extends('layout')
 
-@section('title', 'product')
+@section('title', 'edit')
 
 @section('content')
 
@@ -17,7 +17,7 @@
             Price: <input type="number" step="0.01" name="price" value="{{ $product->price }}" required>
             <br>
             <br>
-            <input type="file" name="image" placeholder={{ trans("Image") }}  {{ $product->id == null ? "required" : "" }}  >
+            <input type="file" name="image" placeholder={{ trans("Image") }}>
             <br>
             <br>
             <input type="submit" name="save" value={{ trans("Save") }}>
