@@ -3,7 +3,7 @@
 
 <head>
     <link rel="stylesheet" type="text/css" href="{{ url('/css/style.css') }}" />
-    <title></title>
+    <title>@yield('title')</title>
 </head>
 
 <body>

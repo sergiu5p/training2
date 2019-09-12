@@ -45,7 +45,7 @@ Route::group(['middleware' => 'login'], function () {
         'as' => 'product.store'
     ]);
 
-    Route::post('/update/{id}', [
+    Route::put('/update/{id}', [
         'uses' => 'ProductController@update',
         'as' => 'update'
     ]);

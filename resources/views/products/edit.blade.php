@@ -8,6 +8,7 @@
         <form method="POST" action={{ route('update', $product->id) }} enctype="multipart/form-data">
             @csrf
 
+            <input type="hidden" name="_method" value="PUT">
             Title: <input type="text" name="title" value="{{ $product->title }}" required>
             <br>
             <br>

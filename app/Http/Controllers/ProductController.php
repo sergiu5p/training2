@@ -111,11 +111,6 @@ class ProductController extends Controller
 
     public function create(Request $request)
     {
-        
-        if ($request->ajax()) {
-            return ['success' => true];
-        }
-
         return view('products.create');
     }
 
@@ -170,7 +165,6 @@ class ProductController extends Controller
 
     public function destroy(Request $request, $id)
     {
-
         $product = Product::query()->findOrFail($id, ['id', 'image_extension']);
         File::delete(public_path('/images/'). $product->id . '.' . $product->image_extension);
 

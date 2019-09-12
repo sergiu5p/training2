@@ -65,16 +65,6 @@ class OrderController extends Controller
 
     public function index(Request $request)
     {
-        if (!$request->session()->has('login')) {
-            return redirect()->route('login');
-        }
-
-        /*$orders = DB::table(DB::raw('order_product'))
-            ->select(DB::raw('orders.*'), DB::raw("SUM(products.price) AS summed_price"))
-            ->leftJoin(DB::raw('orders'), DB::raw('order_product.order_id'), '=', DB::raw('orders.id'))
-            ->leftJoin(DB::raw('products'), DB::raw('order_product.product_id'), '=', DB::raw('products.id'))
-            ->groupBy(DB::raw('order_product.order_id'))->get();*/
-
         $orders = Order::with('products')->get();
 
         if ($request->ajax()) {
@@ -86,16 +76,6 @@ class OrderController extends Controller
 
     public function show(Request $request, $id)
     {
-        if (!$request->session()->has('login')) {
-            return redirect()->route('login');
-        }
-
-        // $order = DB::table(DB::raw('order_product'))
-        //     ->select(DB::raw('products.title'), DB::raw('orders.name'), DB::raw('orders.email'), DB::raw('orders.comments'))
-        //     ->rightJoin(DB::raw('products'), DB::raw('order_product.product_id'), '=', DB::raw('products.id'))
-        //     ->rightJoin(DB::raw('orders'), DB::raw('order_product.order_id'), '=', DB::raw('orders.id'))
-        //     ->where(DB::raw('order_product.order_id'), '=', DB::raw($id))->get();
-
         $order = Order::with('products')->findOrFail($id);
         
         if ($request->ajax()) {

@@ -53,7 +53,9 @@
 
 <div class="page product">
     <form class="product_edit" enctype="multipart/form-data">
+
         <input id="product_id" type="hidden" name="product_id" value="">
+        <input type="hidden" name="_method" value="PUT">
         Title: <input id="product_title" type="text" name="title" value="" required>
         <br>
         <br>
@@ -75,10 +77,10 @@
         Title: <input type="text" name="title" required>
         <br>
         <br>
-        Description: <input type="text" name="description" value="" required>
+        Description: <input type="text" name="description" required>
         <br>
         <br>
-        Price: <input type="number" step="0.01" name="price" value="" required>
+        Price: <input type="number" step="0.01" name="price" required>
         <br>
         <br>
         <input type="file" name="image" placeholder={{ trans("Image") }} required>
