@@ -49,7 +49,6 @@
              * }]
              */
 
-
             function showOrders(orders) {
                 html = [].join('');
 
@@ -163,6 +162,9 @@
                         $('.product').show();
                         break;
                     case '#create':
+                        $("#create_product_title").val("");
+                        $("#create_product_description").val("");
+                        $("#create_product_price").val("");
                         $('.create').show();
                         break;
                     case '#logout':
@@ -363,7 +365,7 @@
             });
         });
     </script>
-    <title></title>
+    <title>SPA</title>
 </head>
 <body>
 <ul>
