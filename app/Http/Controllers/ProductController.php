@@ -5,7 +5,8 @@ namespace App\Http\Controllers;
 use App\Product;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\File;
-use Illuminate\Validation\Rule;
+use App\Http\Requests\CreateProduct;
+use App\Http\Requests\EditProduct;
 
 class ProductController extends Controller
 {
@@ -58,31 +59,9 @@ class ProductController extends Controller
      * @param  int  $id
      * @return array
      */
-    public function update(Request $request, $id)
+    public function update(EditProduct $request, $id)
     {
-
-        $unique = Rule::unique('products');
-        $unique = $unique->ignore(Product::query()->findOrFail($id));
-
-        $validatedData = $request->validate([
-            'title' => ['bail',
-                        'required',
-                        'max:255',
-                        $unique,
-                        ],
-
-            'description' => ['required'],
-
-            'price' => [
-                        'required',
-                        'numeric'
-                        ],
-
-            'image' => [
-                        'image',
-                        !$id ? 'required' : ''
-                        ],
-        ]);
+        $validatedData = $request->validated();
 
         $toUpdate = [
             'title' => $validatedData['title'],
@@ -114,27 +93,9 @@ class ProductController extends Controller
         return view('products.create');
     }
 
-    public function store(Request $request)
+    public function store(CreateProduct $request)
     {
-        $validatedData = $request->validate([
-            'title' => ['bail',
-                        'required',
-                        'max:255',
-                        'unique:products',
-                        ],
-
-            'description' => ['required'],
-
-            'price' => [
-                        'required',
-                        'numeric'
-                        ],
-
-            'image' => [
-                        'image',
-                        'required'
-                        ],
-        ]);
+        $validatedData = $request->validated();
 
         $product = Product::query()->create(
             [
